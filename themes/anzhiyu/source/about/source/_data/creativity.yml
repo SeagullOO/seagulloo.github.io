@@ -1,0 +1,29 @@
+- class_name: 开启创造力
+  creativity_list:
+    - name: After Effects
+      color: "#9999ff"
+      icon: https://i.mji.rip/2025/09/11/9b9e093c6dd094cdcb9318f923e2d3c0.png
+    - name: Premiere
+      color: "#9999ff"
+      icon: https://i.mji.rip/2025/09/11/666325c32e40121444eccc95cf0cd038.png
+    - name: AU
+      color: "#9999ff"
+      icon: https://i.mji.rip/2025/09/11/3c9f100b8192ed06634e1f93b7451b3b.png
+    - name: Davinci
+      color: "#e4f4fb"
+      icon: https://i.mji.rip/2025/09/11/e84c1a1ac35e4acf2e71471855979555.png
+    - name: Photoshop
+      color: "#4082c3"
+      icon: https://img02.anheyu.com/adminuploads/1/2022/09/25/63300647e1f10.png
+    - name: Python
+      color: "#ffffff"
+      icon: https://i.mji.rip/2025/09/11/5f504a317bf69466bf96987f0eaec4eb.png
+    - name: C#
+      color: "#e7cfe4"
+      icon: https://i.mji.rip/2025/09/11/0266820ef652b7c600ee376af2b312ba.png
+    - name: Unity
+      color: "#ffffff"
+      icon: https://i.mji.rip/2025/09/11/adb6227e4a40b9f8c7e7206992230c73.png
+    - name: Blender
+      color: "#265787"
+      icon: https://i.mji.rip/2025/09/11/4bc3458c0478aad6b3a40122811b4af5.png

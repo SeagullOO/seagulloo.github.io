@@ -1,0 +1,69 @@
+- class_name: 工作
+  path_name: /work
+  type: 2
+  description: 创作记录
+  cover: https://raw.githubusercontent.com/SeagullOO/Images/main/Img/ed5595ede9320d45f862262b851a6aa3.png
+  top_background: https://raw.githubusercontent.com/SeagullOO/Images/main/Img/20250911162408623.png
+  rowHeight: 220
+  limit: 10
+  lazyload: true
+  btnLazyload: false
+  url: false
+  top_link: /album
+  top_btn_text: 返回
+  album_list:
+    - date: 2025/08/21 18:00:00
+      content: 第一个团队游戏作品
+      address: 上海闵行
+      from: 
+      image:
+        - https://raw.githubusercontent.com/SeagullOO/Images/main/Img/e1373569395811ca8979764641251e66.jpg
+
+- class_name: 旅行
+  path_name: /travel
+  type: 2
+  description: 旅行照片
+  cover: https://raw.githubusercontent.com/SeagullOO/Images/main/Img/c4af52be68150270b7a13d8ef91813ca.jpg
+  top_background: https://raw.githubusercontent.com/SeagullOO/Images/main/Img/c4af52be68150270b7a13d8ef91813ca.jpg
+  rowHeight: 220
+  limit: 10
+  lazyload: true
+  btnLazyload: false
+  url: false
+  top_link: /album
+  top_btn_text: 返回
+  album_list:
+    - date: 2023/11/19 10:53:00
+      content: 醉白池旁边的路。
+      address: 上海松江
+      from: 
+      image:
+        - https://raw.githubusercontent.com/SeagullOO/Images/main/Img/8a696f9e0b66d6fa870e55f79945b862.jpg
+
+- class_name: 日常
+  path_name: /daily
+  type: 1
+  description: 额就是日常
+  top_link: /album
+  top_btn_text: 返回
+  top_background: https://raw.githubusercontent.com/SeagullOO/Images/main/Img/24b5fa71970cb0f1e83967bbaaa60ee2.jpg
+  cover: https://raw.githubusercontent.com/SeagullOO/Images/main/Img/24b5fa71970cb0f1e83967bbaaa60ee2.jpg
+  album_list:
+    - date: 2023-11-3 19:30:00
+      content: 桌面1.0
+      image:
+        - https://raw.githubusercontent.com/SeagullOO/Images/main/Img/f9c16779cf9e7160516a178fe4351157.jpg
+
+- class_name: 乱七八糟
+  path_name: /what
+  type: 1
+  description: 瞎放点什么
+  top_link: /album
+  top_btn_text: 返回
+  top_background: https://raw.githubusercontent.com/SeagullOO/Images/main/Img/76ecf224f6fd08b0fc234451b12f8b98.jpg
+  cover: https://raw.githubusercontent.com/SeagullOO/Images/main/Img/76ecf224f6fd08b0fc234451b12f8b98.jpg
+  album_list:
+    - date: 2025-09-08 00:36:00
+      content: ??
+      image:
+        - https://raw.githubusercontent.com/SeagullOO/Images/main/Img/2a151f6a99b0a7e84e22fd19fd11eeee.jpg
