@@ -1,13 +1,7 @@
+http://example.com/about/index.html
+http://example.com/categories/index.html
+http://example.com/masonry/index.html
 http://example.com/2025/09/23/Seagull-Game-%E6%9A%82%E5%AE%9A-%E5%BC%80%E5%8F%91%E6%97%A5%E8%AE%B0/
 http://example.com/2025/09/13/%E5%AE%89%E7%9F%A5%E9%B1%BC%E4%B8%BB%E9%A2%98%E8%87%AA%E5%AE%9A%E4%B9%89%E6%95%99%E7%A8%8B/
 http://example.com/2025/09/12/Hexo+Github%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E7%AC%94%E8%AE%B0/
-http://example.com/music/source/json/music.json
-http://example.com/music/index.html
-http://example.com/work/index.html
-http://example.com/what/index.html
-http://example.com/travel/index.html
-http://example.com/essay/index.html
-http://example.com/daily/index.html
-http://example.com/album/index.html
-http://example.com/about/index.html
 http://example.com/

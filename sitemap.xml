@@ -2,6 +2,33 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://example.com/about/index.html</loc>
+    
+    <lastmod>2026-03-11</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/categories/index.html</loc>
+    
+    <lastmod>2026-03-11</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://example.com/masonry/index.html</loc>
+    
+    <lastmod>2026-03-11</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://example.com/2025/09/23/Seagull-Game-%E6%9A%82%E5%AE%9A-%E5%BC%80%E5%8F%91%E6%97%A5%E8%AE%B0/</loc>
     
     <lastmod>2025-09-23</lastmod>
@@ -28,91 +55,10 @@
     <priority>0.6</priority>
   </url>
   
-  <url>
-    <loc>http://example.com/music/source/json/music.json</loc>
-    
-    <lastmod>2025-09-12</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://example.com/music/index.html</loc>
-    
-    <lastmod>2025-09-12</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://example.com/work/index.html</loc>
-    
-    <lastmod>2025-09-12</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://example.com/what/index.html</loc>
-    
-    <lastmod>2025-09-12</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://example.com/travel/index.html</loc>
-    
-    <lastmod>2025-09-12</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://example.com/essay/index.html</loc>
-    
-    <lastmod>2025-09-12</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://example.com/daily/index.html</loc>
-    
-    <lastmod>2025-09-12</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://example.com/album/index.html</loc>
-    
-    <lastmod>2025-09-12</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://example.com/about/index.html</loc>
-    
-    <lastmod>2025-09-10</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
 
   <url>
     <loc>http://example.com/</loc>
-    <lastmod>2025-09-23</lastmod>
+    <lastmod>2026-03-11</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
