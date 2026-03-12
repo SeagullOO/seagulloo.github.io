@@ -1,7 +1,7 @@
 ---
 title: Seagull Game(暂定)开发日记
 date: 2025-09-23 00:03:02
-tags:
+categories: Game
 top_img: https://i.mji.rip/2025/09/23/daf2abec16ef3d133191046339c16095.png
 cover: https://i.mji.rip/2025/09/23/daf2abec16ef3d133191046339c16095.png
 ---
