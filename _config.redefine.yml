@@ -25,11 +25,11 @@ info:
 # Docs: https://redefine-docs.ohevan.com/basic/defaults
 defaults:
   # Favicon
-  favicon: /images/favicon.ico
+  favicon: /images/favicon.svg
   # Site logo
-  logo: /images/favicon.ico
+  logo: /images/favicon.svg
   # Site avatar
-  avatar: /images/favicon.ico
+  avatar: /images/favicon.svg
 # IMAGE CONFIGURATION <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< end
 
 
