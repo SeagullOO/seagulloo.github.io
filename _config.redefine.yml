@@ -219,7 +219,10 @@ navbar:
       icon: fa-regular fa-archive # can be empty
     Categories:
       path: /categories
-      icon: fa-regular fa-archive # can be empty
+      icon: fa-solid fa-folder # can be empty
+    Tags:
+        path: /tags
+        icon: fa-solid fa-tags # can be empty
     Portfolio:
       path: /masonry
       icon: fa-regular fa-link
