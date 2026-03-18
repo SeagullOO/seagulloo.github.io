@@ -137,7 +137,7 @@ home_banner:
   title: Seagull OO
   # Home banner subtitle
   subtitle:
-    text: ["游戏，视频，三维，AIGC。", "Game, Video, 3D, AIGC, All in one."] # subtitle text, array
+    text: ["学习中"] # subtitle text, array
     hitokoto:  # 一言配置
       enable: false # Whether to enable hitokoto
       show_author: false # Whether to show author
