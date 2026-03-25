@@ -94,7 +94,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/images/redefine-og.webp">
 <meta property="article:published_time" content="2026-03-25T00:58:24.000Z">
-<meta property="article:modified_time" content="2026-03-25T02:04:43.914Z">
+<meta property="article:modified_time" content="2026-03-25T14:49:16.002Z">
 <meta property="article:author" content="Bottle OO">
 <meta property="article:tag" content="明日方舟：终末地">
 <meta name="twitter:card" content="summary">
@@ -697,8 +697,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2026-03-25 10:04:43</span>
-            <span class="mobile">2026-03-25 10:04:43</span>
+            <span class="desktop">2026-03-25 22:49:16</span>
+            <span class="mobile">2026-03-25 22:49:16</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -779,7 +779,7 @@
 <li>再次进安全模式，重复1和2的步骤，但这次<strong>没有装驱动</strong>。先更新windows至25H2（因为u盘装的是25H2，版本不一致不能保留所有应用和文件重装）。更新至25H2后可以正常稳定进系统。再次安装显卡驱动，Studio 591.74，依旧可以正常稳定进系统。</li>
 </ol>
 <p>。。。</p>
-<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>Windows 24H2（2025 年 10 月 14 日 - KB5066835(OS 内部版本 26200.6899 和 26100.6899)）和Nvidia Studio 595.79在新版本终末地使用dx11启动后有概率出现系统无法启动的问题。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>Windows 24H2（2025 年 10 月 14 日 - KB5066835(OS 内部版本 26200.6899 和 26100.6899)）和Nvidia Studio 595.79在新版本终末地使用dx11启动后有概率出现系统无法启动的问题。</p>
 <blockquote>
 <p>ChatGPT总结原因：旧版 Windows 图形内核（WDDM &#x2F; DX11 路径）与新 NVIDIA 驱动（59x 分支）不兼容，导致内核级调度死锁（DPC_WATCHDOG_VIOLATION），并逐步污染系统启动状态的问题。<br>而升级到 Windows 11 version 25H2 后：底层图形栈被整体替换 → 兼容性恢复 → 问题消失</p>
 </blockquote>
@@ -788,6 +788,23 @@
 <blockquote>
 <p>ChatGPT总结原因：升级到 Windows 11 version 25H2 实际上通过一次系统级重构解决了问题，其核心在于系统更新过程中不仅替换了包括 dxgkrnl.sys 和 dxgmms2.sys 在内的图形内核组件并升级了 WDDM 版本，相当于重建了 GPU 调度机制，同时还会重建 DriverStore 索引、重新匹配驱动签名并清理旧的注册表绑定，从而消除了此前残留的驱动污染，此外新版系统还对 DX11 到 DXGI 的兼容转换层进行了修复，解决了新驱动在旧图形栈下的兼容性缺陷，最终实现了“干净驱动环境 + 新图形内核”的组合，使原本因驱动与系统不匹配导致的 DPC 阻塞和蓝屏问题彻底消失。</p>
 </blockquote>
+<h2 id="3-25-22-15-二更"><a href="#3-25-22-15-二更" class="headerlink" title="3.25 22:15 二更"></a>3.25 22:15 二更</h2><p>我是俊福。上文是在学校里写的，下课回宿舍想着美美回塔卫二收个菜就接着完成昨天没做完的作业，进游戏看到我的帝江号没三四秒又黑屏了。此时下午一点整。</p>
+<p>系统：Windows 11 专业工作站 25H2</p>
+<p>显卡驱动：Studio 591.74</p>
+<ol start="5">
+<li>安全模式再次开机，依旧显示器无信号，报错：<code>无法在此设备上加载驱动程序 驱动程序:ssgdio64.sys。某个安全设置将其检测为易受攻击的驱动程序，并阻止其加载。你需要调整设置以加载此驱动程序</code>。</li>
+</ol>
+<p>在<code>C:\Windows\SysWOW64\Drivers\</code>中找到该文件，修改时间是2021年，公司Ati Diagnostics Hardware Abstraction Sys，版本号5.11.9.0。查询ChatGPT，得到的答复是终末地触发了某个硬件检测&#x2F;反作弊&#x2F;调用，尝试加载了这个过时的底层驱动。</p>
+<ol start="6">
+<li>在文件位置删除<code>ssgdio64.sys</code>，重新启动。</li>
+</ol>
+<p>好了，到这一步后就是电脑完全无法进系统和bios，显示器无信号，向日葵显示设备不在线（我是自动登录，昨天就是靠这招在显示器无信号的情况下重装的）。</p>
+<ol start="7">
+<li>尝试过上述所有提到的方法，包括但不限于主板放电、插拔显卡放电、重复开关机、开机后盲操尝试进入Bios和系统等所有不借助外界工具的方法，全部无效。没有进系统的提示音，主板自检灯也没亮，机箱&#x2F;CPU&#x2F;显卡风扇和显卡灯光正常，但就是毫无进系统的样子。</li>
+</ol>
+<p>就这样从下午一点半持续到现在十点二十八，没有一点变化。昨天至少还能碰运气进个bios或安全模式，现在是啥都没有只有显示器无信号。</p>
+<p>祸不单行，昨天中午提交的工单到现在都还没有结果，依旧处理中耐心等待。</p>
+<p>没人知道我有多希望她开机。但我也跟终末地杠上了：下一次成功进系统，要把所有变量都测一遍，我太好奇这游戏有什么魔力了。之前一直觉得是Windows和驱动的问题，但现在游戏的问题概率在我这里变得越来越大。</p>
 
 		</div>
 
@@ -802,7 +819,7 @@
         
             <li>
                 <strong>Updated at
-                    :</strong> 2026-03-25 10:04:43
+                    :</strong> 2026-03-25 22:49:16
             </li>
         
         <li>
@@ -927,7 +944,7 @@
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">终末地DX11+595.79驱动导致的开机问题</div>
-		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%88%E6%94%BE%E5%B7%A5%E5%8D%95"><span class="nav-text">先放工单</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E5%8E%86%E7%A8%8B"><span class="nav-text">解决历程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-text">结论</span></a></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%88%E6%94%BE%E5%B7%A5%E5%8D%95"><span class="nav-text">先放工单</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E5%8E%86%E7%A8%8B"><span class="nav-text">解决历程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-text">小结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-25-22-15-%E4%BA%8C%E6%9B%B4"><span class="nav-text">3.25 22:15 二更</span></a></li></ol>
 
 	</div>
 </div>
