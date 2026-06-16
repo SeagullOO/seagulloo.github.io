@@ -1,0 +1,2094 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    
+    <meta name="author" content="Seagull OO">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes ASAP (before DOMContentLoaded)
+            (function() {
+                const addBodyClass = () => {
+                    const b = document.body;
+                    if (!b) return false;
+                    b.classList.add(theme + "-mode");
+                    return true;
+                };
+
+                // Try immediately
+                if (addBodyClass()) return;
+
+                // Observe until body exists
+                const mo = new MutationObserver(() => {
+                    if (addBodyClass()) mo.disconnect();
+                });
+                mo.observe(document.documentElement, { childList: true, subtree: true });
+            })();
+        })();
+    </script>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="http://example.com/2026/06/15/小匕首中战斗管线的实现/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《小匕首》中战斗管线的实现">
+<meta property="og:url" content="http://example.com/2026/06/15/%E5%B0%8F%E5%8C%95%E9%A6%96%E4%B8%AD%E6%88%98%E6%96%97%E7%AE%A1%E7%BA%BF%E7%9A%84%E5%AE%9E%E7%8E%B0/index.html">
+<meta property="og:site_name" content="海鸥整点百香果">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/redefine-og.webp">
+<meta property="article:published_time" content="2026-06-15T10:55:22.000Z">
+<meta property="article:modified_time" content="2026-06-16T02:35:09.912Z">
+<meta property="article:author" content="Bottle OO">
+<meta property="article:tag" content="Unity">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/favicon.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.svg">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/favicon.svg">
+    <!--- Page Info-->
+    
+    <title>
+        
+            《小匕首》中战斗管线的实现 | Seagull OO
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+    
+    
+        
+<script src="/js/build/libs/anime.min.js"></script>
+
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"example.com","root":"/","language":"en","path":"search.xml"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"github","dark":"vs2015"},"font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"drak"},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":true,"custom_message":"Wang's Blog"},"side_tools":{"gear_rotation":true,"auto_expand":false},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"https://i.mji.rip/2026/03/11/9ceaacc84d00f7ad74c1bf8587b71927.jpeg","dark":"https://i.mji.rip/2026/03/11/9ceaacc84d00f7ad74c1bf8587b71927.jpeg"},"title":"Seagull OO","subtitle":{"text":["学习中"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#F5F5F5","dark":"#F5F5F5"},"text_style":{"title_size":"3.5rem","subtitle_size":"1.7rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"style":"default","links":[{"icon":"fa-brands fa-github","url":null},{"icon":"fa-brands fa-twitter","url":null},{"icon":"fa-solid fa-at","url":"you@example.com"},{"icon":"fa-brands fa-telegram","url":null},{"icon":"/images/custom-icon.svg","url":null}],"qrs":[{"icon":"fa-brands fa-weixin","qr":null},{"icon":"/images/custom-icon.svg","qr":null}]}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1","theme":{"light":"default","dark":"dark"}}},"version":"2.9.0","navbar":{"auto_hide":false,"color":{"left":"#696969","right":"#696969","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Categories":{"path":"/categories","icon":"fa-solid fa-folder"},"Tags":{"path":"/tags","icon":"fa-solid fa-tags"},"Portfolio":{"path":"/masonry","icon":"fa-regular fa-link"},"About":{"icon":"fa-regular fa-user","submenus":{"Me":"/about","Github":"https://github.com/SeagullOO"}}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur","masonry":{"batch_size":12,"initial_batch_size":24}},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footer":{"runtime":true,"icon":"<i class=\"fa-solid fa-heart fa-beat\" style=\"--fa-animation-duration: 0.5s; color: #f54545\"></i>","start":"2022/8/17 11:45:14","statistics":true,"customize":null,"icp":{"enable":false,"number":null,"url":null}},"footerStart":"2022/8/17 11:45:14","mermaid":{"style":{"light":"default","dark":"dark"}}};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.i18n = {"search":"Search...","toc":"On this page","prev":"Prev","next":"Next","prev_posts":"Prev posts","next_posts":"Next posts","page":"Page %d","recent_posts":"Recent Posts","share":"Share","powered_by":"POWERED BY %s","theme":"THEME","rss_feed":"RSS Feed","category":"Category","categories":"Categories","tag":"Tag","tags":"Tags","post":"Post","posts":"Posts","tagcloud":"Tag Cloud","comment":"Comment","comments":"Comments","home":"Home","archive":"Archive","archives":"Archives","top":"TOP","sticky":"Sticky","go-back-home":"Go Back Home","masonry_loading":"Loading photos...","image_viewer":"Image viewer","close":"Close","exif":{"title":"EXIF","cards":{"camera":"Camera","lens":"Lens","exposure":"Exposure","other":"Other"},"fields":{"make":"Brand","model":"Model","date_taken":"Date taken","lens_model":"Lens","focal_length":"Focal length","focus_mode":"Focus mode","shutter":"Shutter","aperture":"Aperture","iso":"ISO","exposure_program":"Exposure program","exposure_compensation":"Exposure compensation","metering_mode":"Metering mode","flash":"Flash","white_balance":"White balance","latitude":"Latitude","longitude":"Longitude","altitude":"Altitude"},"status":{"loading":"Loading...","no_exif":"No EXIF available","library_missing":"EXIF library not loaded","image_source_missing":"Image source unavailable","unavailable":"EXIF unavailable (blocked by CORS or missing metadata)","flag_unavailable":"EXIF unavailable"}},"about":"About","changelog":"Changelog","links":"Links","link":"Link","friends":"Friends","friend":"Friend","timeline":"Timeline","shuoshuo":"Shuoshuo","bookmarks":"Bookmarks","site_uv":"VISITOR COUNT","site_pv":"TOTAL PAGE VIEWS","read_more":"Read more","wordcount":"Words","min2read":"Mins","status":"Status","runtime":"Blog up for","days":"days","hours":"hrs","minutes":"Min","seconds":"Sec","optimized_by":"and Optimized by Evan","rights":"All Rights Reserved","site_posts":"%s posts in total","site_wordcount":"%s words in total","copyright":{"author":"Author","title":"Title","link":"Link","create_time":"Created at","update_time":"Updated at","license_title":"License","license_content":"This work is licensed under %s.","all_rights_reserved":"All Rights Reserved &#169; %s","public_domain":"This work is in the public domain."},"ago":{"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"},"create_time":"Created","update_time":"Updated","expired":"This post is written %s days ago, and the content may not be up to date."};
+    window.data = {"masonry":true};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<style>
+    :root {
+        --preloader-background-color: #fff;
+        --preloader-text-color: #000;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --preloader-background-color: #202124;
+            --preloader-text-color: #fff;
+        }
+    }
+
+    @media (prefers-color-scheme: light) {
+        :root {
+            --preloader-background-color: #fff;
+            --preloader-text-color: #000;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .ml13 {
+            font-size: 2.6rem !important; /* Adjust this value as needed */
+        }
+    }
+
+    .preloader {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem; /* Tailwind 'gap-4' is 1rem */
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        padding: 12px;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh; /* 'h-screen' is 100% of the viewport height */
+        background-color: var(--preloader-background-color);
+        z-index: 1100; /* 'z-[1100]' sets the z-index */
+        transition: opacity 0.2s ease-in-out;
+    }
+
+    .ml13 {
+        font-size: 3.2rem;
+        /* text-transform: uppercase; */
+        color: var(--preloader-text-color);
+        letter-spacing: -1px;
+        font-weight: 500;
+        font-family: 'Chillax-Variable', sans-serif;
+        text-align: center;
+    }
+
+    .ml13 .word {
+        display: inline-flex;
+        flex-wrap: wrap;
+        white-space: nowrap;
+    }
+
+    .ml13 .letter {
+        display: inline-block;
+        line-height: 1em;
+    }
+</style>
+
+<div class="preloader">
+    <h2 class="ml13">
+        Wang&#39;s Blog
+    </h2>
+    <script>
+        var textWrapper = document.querySelector('.ml13');
+        // Split text into words
+        var words = textWrapper.textContent.trim().split(' ');
+
+        // Clear the existing content
+        textWrapper.innerHTML = '';
+
+        // Wrap each word and its letters in spans
+        words.forEach(function(word) {
+            var wordSpan = document.createElement('span');
+            wordSpan.classList.add('word');
+            wordSpan.innerHTML = word.replace(/\S/g, "<span class='letter'>$&</span>");
+            textWrapper.appendChild(wordSpan);
+            textWrapper.appendChild(document.createTextNode(' ')); // Add space between words
+        });
+
+        var animation = anime.timeline({ loop: true })
+            .add({
+                targets: '.ml13 .letter',
+                translateY: [20, 0],
+                translateZ: 0,
+                opacity: [0, 1],
+                filter: ['blur(5px)', 'blur(0px)'],
+                easing: "easeOutExpo",
+                duration: 1200,
+                delay: (el, i) => 300 + 20 * i,
+            })
+            .add({
+                targets: '.ml13 .letter',
+                translateY: [0, -20],
+                opacity: [1, 0],
+                filter: ['blur(0px)', 'blur(5px)'],
+                easing: "easeInExpo",
+                duration: 1000,
+                delay: (el, i) => 15 * i,
+                complete: function() {
+                    hidePreloader();
+                }
+            }, '-=700');
+
+
+        let themeStatus = JSON.parse(localStorage.getItem('REDEFINE-THEME-STATUS'))?.isDark;
+
+        // If the theme status is not found in local storage, check the preferred color scheme
+        if (themeStatus === undefined || themeStatus === null) {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                themeStatus = 'dark';
+            } else {
+                themeStatus = 'light';
+            }
+        }
+
+        // Now you can use the themeStatus variable in your code
+        if (themeStatus) {
+            document.documentElement.style.setProperty('--preloader-background-color', '#202124');
+            document.documentElement.style.setProperty('--preloader-text-color', '#fff');
+        } else {
+            document.documentElement.style.setProperty('--preloader-background-color', '#fff');
+            document.documentElement.style.setProperty('--preloader-text-color', '#000');
+        }
+
+        window.addEventListener('load', function () {
+            setTimeout(hidePreloader, 5000); // Call hidePreloader after 5000 milliseconds if not already called by animation
+        });
+
+        function hidePreloader() {
+            var preloader = document.querySelector('.preloader');
+            preloader.style.opacity = '0';
+            setTimeout(function () {
+                preloader.style.display = 'none';
+            }, 200);
+        }
+    </script>
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/">
+                    <img src="/images/favicon.svg" class="w-full h-full rounded-xs">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                Seagull OO
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/archives"
+                                        >
+                                    <i class="fa-regular fa-archive fa-fw"></i>
+                                    ARCHIVES
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/categories"
+                                        >
+                                    <i class="fa-solid fa-folder fa-fw"></i>
+                                    CATEGORIES
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/tags"
+                                        >
+                                    <i class="fa-solid fa-tags fa-fw"></i>
+                                    TAGS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/masonry"
+                                        >
+                                    <i class="fa-regular fa-link fa-fw"></i>
+                                    PORTFOLIO
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="has-dropdown"
+                                   href="#"
+                                        onClick=&#34;return false;&#34;>
+                                    <i class="fa-regular fa-user fa-fw"></i>
+                                    ABOUT
+                                    <i class="fa-solid fa-chevron-down fa-fw"></i>
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                                    <ul class="sub-menu">
+                                        
+                                            <li>
+                                                <a href="/about">
+                                                    ME
+                                                </a>
+                                            </li>
+                                        
+                                            <li>
+                                                <a target="_blank" rel="noopener" href="https://github.com/SeagullOO">
+                                                    GITHUB
+                                                </a>
+                                            </li>
+                                        
+                                    </ul>
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/archives"
+                        >
+                            <span>
+                                ARCHIVES
+                            </span>
+                            
+                                <i class="fa-regular fa-archive fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/categories"
+                        >
+                            <span>
+                                CATEGORIES
+                            </span>
+                            
+                                <i class="fa-solid fa-folder fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/tags"
+                        >
+                            <span>
+                                TAGS
+                            </span>
+                            
+                                <i class="fa-solid fa-tags fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/masonry"
+                        >
+                            <span>
+                                PORTFOLIO
+                            </span>
+                            
+                                <i class="fa-regular fa-link fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item-sub text-base my-1.5 flex flex-col w-full">
+                        
+                        <div class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary cursor-pointer text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                             navbar-data-toggle="submenu-About"
+                        >
+                            <span>
+                                ABOUT
+                            </span>
+                            
+                                <i class="fa-solid fa-chevron-right fa-sm fa-fw transition-all"></i>
+                            
+                        </div>
+                        
+
+                        
+                            <div class="flex-col items-start px-2 py-2 hidden" data-target="submenu-About">
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           href="/about">ME</a>
+                                    </div>
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           target="_blank" rel="noopener" href="https://github.com/SeagullOO">GITHUB</a>
+                                    </div>
+                                
+                            </div>
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">5</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">6</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">13</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">《小匕首》中战斗管线的实现</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] shrink-0 rounded-medium border border-border-color p-px">
+				<img src="/images/favicon.svg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">Seagull OO</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv2</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2026-06-15 18:55:22</span>
+        <span class="mobile">2026-06-15 18:55:22</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2026-06-16 10:35:09</span>
+            <span class="mobile">2026-06-16 10:35:09</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+        <span class="article-categories article-meta-item">
+            <i class="fa-regular fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/%E6%B8%B8%E6%88%8F%E5%BC%80%E5%8F%91/">游戏开发</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fa-regular fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/Unity/">Unity</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<blockquote>
+<p>源码路径：<code>Assets/_Project/Scripts/Tatakai</code><br>设计参考：<code>Assets/_Project/Scripts/Tatakai/战斗文档.md</code><br>生成日期：2026-06-15</p>
+</blockquote>
+<hr>
+<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ol>
+<li><a href="#%E4%B8%80%E6%A8%A1%E5%9D%97%E6%80%BB%E8%A7%88">模块总览</a></li>
+<li><a href="#%E4%BA%8C%E6%88%98%E6%96%97%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">战斗生命周期</a></li>
+<li><a href="#%E4%B8%89%E5%9B%9E%E5%90%88%E6%B5%81%E7%A8%8B%E8%AF%A6%E8%A7%A3">回合流程详解</a></li>
+<li><a href="#%E5%9B%9B%E8%A1%8C%E4%B8%BA%E7%AE%A1%E7%BA%BF%E4%B8%8E%E6%97%B6%E7%82%B9%E5%BA%8F%E5%88%97">行为管线与时点序列</a></li>
+<li><a href="#%E4%BA%94buff-%E7%B3%BB%E7%BB%9F">Buff 系统</a></li>
+<li><a href="#%E5%85%ADbattlecontext-%E4%B8%8A%E4%B8%8B%E6%96%87">BattleContext 上下文</a></li>
+<li><a href="#%E4%B8%83tatakaimanager-%E8%B0%83%E5%BA%A6%E4%B8%AD%E6%9E%A2">TatakaiManager 调度中枢</a></li>
+<li><a href="#%E5%85%AB%E5%9C%B0%E5%9D%97%E6%9F%93%E8%89%B2%E4%B8%8E%E5%8F%AC%E5%94%A4%E7%89%A9">地块、染色与召唤物</a></li>
+<li><a href="#%E4%B9%9D%E9%AA%B0%E5%AD%90%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">骰子生命周期</a></li>
+<li><a href="#%E5%8D%81%E6%95%8C%E4%BA%BA%E6%84%8F%E5%9B%BE%E4%B8%8E-ai">敌人意图与 AI</a></li>
+<li><a href="#%E5%8D%81%E4%B8%80%E8%AE%BE%E8%AE%A1%E6%96%87%E6%A1%A3%E4%B8%8E%E4%BB%A3%E7%A0%81%E5%AF%B9%E7%85%A7">设计文档与代码对照</a></li>
+<li><a href="#%E5%8D%81%E4%BA%8C%E6%96%87%E4%BB%B6%E7%B4%A2%E5%BC%95">文件索引</a></li>
+</ol>
+<hr>
+<h2 id="一、模块总览"><a href="#一、模块总览" class="headerlink" title="一、模块总览"></a>一、模块总览</h2><h3 id="1-1-目录结构"><a href="#1-1-目录结构" class="headerlink" title="1.1 目录结构"></a>1.1 目录结构</h3><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">Tatakai/</span><br><span class="line">├── TatakaiManager.cs          # 战斗中枢：回合、行为、Buff 调度</span><br><span class="line">├── 战斗文档.md                   # 策划设计文档（时点附录、流程说明）</span><br><span class="line">├── Core/                        # 战斗数据模型</span><br><span class="line">│   ├── BattleContext.cs         # 行动上下文（Buff 黑板）</span><br><span class="line">│   ├── Character.cs / Enemy.cs  # 战斗实体</span><br><span class="line">│   ├── ICombatEntity.cs         # 实体接口（HP/护盾/Buff 列表）</span><br><span class="line">│   ├── Stage.cs                 # 地块</span><br><span class="line">│   ├── TileColor.cs / TileType.cs</span><br><span class="line">│   ├── SummonData.cs            # 召唤物</span><br><span class="line">│   └── PendingBuffOp.cs         # Buff 副作用队列</span><br><span class="line">├── Buff/                        # Buff 框架（详见第五节）</span><br><span class="line">│   ├── BuffPipeline.cs          # 单时点执行器</span><br><span class="line">│   ├── ActionPipeline.cs        # 行为管线（时点序列）</span><br><span class="line">│   ├── BuffTriggerPoint.cs      # 时点枚举</span><br><span class="line">│   └── Buffs/BuffCatalog.cs     # 名字注册表（主要 Buff 实现）</span><br><span class="line">└── Fronts/                      # 表现层（HUD、棋盘 3D、VFX 等）</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="1-2-核心架构"><a href="#1-2-核心架构" class="headerlink" title="1.2 核心架构"></a>1.2 核心架构</h3><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">┌─────────────────────────────────────────────────────────────┐</span><br><span class="line">│                     TatakaiManager                          │</span><br><span class="line">│  回合管理 / 骰子池 / 棋盘 / 敌人意图 / HP 结算              │</span><br><span class="line">└──────────────────────────┬──────────────────────────────────┘</span><br><span class="line">                           │</span><br><span class="line">         ┌─────────────────┼─────────────────┐</span><br><span class="line">         ▼                 ▼                 ▼</span><br><span class="line">   ActionPipeline     BuffPipeline.Exec    DrainPendingOps</span><br><span class="line">   (行为时点序列)      (单时点 Buff)        (副作用消费)</span><br><span class="line">         │                 │                 │</span><br><span class="line">         └────────┬────────┘                 │</span><br><span class="line">                  ▼                          ▼</span><br><span class="line">           BattleContext              改 HP/护盾/骰子/加 Buff</span><br><span class="line">           (共享黑板)</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>关键原则：</strong></p>
+<ul>
+<li>所有战斗行为都通过 <strong>时点（BuffTriggerPoint）</strong> 驱动 Buff 结算</li>
+<li>Buff 只读写 <code>BattleContext</code>，不直接碰实体</li>
+<li>需要改游戏状态的副作用入 <code>PendingOps</code>，由 Manager 统一消费</li>
+<li><code>ActionPipeline</code> 定义「一种行为要经过哪些时点」；<code>TatakaiManager</code> 负责在正确时机调用</li>
+</ul>
+<hr>
+<h2 id="二、战斗生命周期"><a href="#二、战斗生命周期" class="headerlink" title="二、战斗生命周期"></a>二、战斗生命周期</h2><h3 id="2-1-战斗目标"><a href="#2-1-战斗目标" class="headerlink" title="2.1 战斗目标"></a>2.1 战斗目标</h3><ul>
+<li>玩家失败：主角 HP 归零</li>
+<li>玩家胜利：所有怪物死亡</li>
+</ul>
+<h3 id="2-2-初始化流程"><a href="#2-2-初始化流程" class="headerlink" title="2.2 初始化流程"></a>2.2 初始化流程</h3><p><strong>入口：</strong> <code>SetupBattle()</code>（正式战斗）或 <code>InitDefault()</code>（测试场景）</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">SetupBattle(player, enemy, dices, buffs, addedTiles)</span><br><span class="line">│</span><br><span class="line">├─ 1. 初始化棋盘（固定地块 + 肢体/怪物特殊地块覆盖）</span><br><span class="line">├─ 2. 绑定玩家/敌人实体</span><br><span class="line">├─ 3. 应用敌人初始 Buff（SO_EnemyData.initialBuffs）</span><br><span class="line">├─ 4. 应用持久敌人 Buff（祭坛选项，跨战斗保留）</span><br><span class="line">├─ 5. 合并玩家肢体 Buff 到 player.Buffs</span><br><span class="line">├─ 6. 绑定死亡事件（OnDeath → Death/BattleEnd 时点）</span><br><span class="line">├─ 7. 设置骰子模板 _diceTemplate（每回合重发依据）</span><br><span class="line">├─ 8. Exec(BattleStart) × 玩家 + 敌人</span><br><span class="line">└─ 9. StartRound() → 进入第 1 回合</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="2-3-战斗结束"><a href="#2-3-战斗结束" class="headerlink" title="2.3 战斗结束"></a>2.3 战斗结束</h3><p>死亡事件触发后（<code>_battleResolved</code> 防重入）：</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Exec(Death)  → 玩家 + 敌人</span><br><span class="line">Exec(BattleEnd) → 玩家 + 敌人</span><br><span class="line">OnEnemyDefeated / OnPlayerDefeated 事件</span><br></pre></td></tr></table></figure></div>
+
+<hr>
+<h2 id="三、回合流程详解"><a href="#三、回合流程详解" class="headerlink" title="三、回合流程详解"></a>三、回合流程详解</h2><h3 id="3-1-完整回合循环"><a href="#3-1-完整回合循环" class="headerlink" title="3.1 完整回合循环"></a>3.1 完整回合循环</h3><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">┌──────────────────────────────────────────────────────────────┐</span><br><span class="line">│                    StartRound() [玩家回合开始]                │</span><br><span class="line">│  RegenerateDiceFromTemplate → ShieldCleared → TurnStart      │</span><br><span class="line">│  召唤物 SummonTurnStart + SummonDamage 管线                  │</span><br><span class="line">│  OnTurnChanged(PlayerTurn) + OnRoundStart                    │</span><br><span class="line">└──────────────────────────┬───────────────────────────────────┘</span><br><span class="line">                           ▼</span><br><span class="line">┌──────────────────────────────────────────────────────────────┐</span><br><span class="line">│                    玩家回合阶段                               │</span><br><span class="line">│  TryMove() / TryActivateTile() / EndTurn()                   │</span><br><span class="line">└──────────────────────────┬───────────────────────────────────┘</span><br><span class="line">                           ▼</span><br><span class="line">┌──────────────────────────────────────────────────────────────┐</span><br><span class="line">│                    EndPlayerTurn()                            │</span><br><span class="line">│  TurnEnd → 弃骰(DieDiscarded) → 召唤物 SummonTurnEnd          │</span><br><span class="line">│  → EnemyTurnRoutine() 协程                                    │</span><br><span class="line">└──────────────────────────┬───────────────────────────────────┘</span><br><span class="line">                           ▼</span><br><span class="line">┌──────────────────────────────────────────────────────────────┐</span><br><span class="line">│                    敌人回合                                   │</span><br><span class="line">│  ShieldCleared → TurnStart → 执行意图 → TurnEnd              │</span><br><span class="line">│  _enemy.TickBuffs() → _player.TickBuffs()（攻击后）           │</span><br><span class="line">│  ApplyIntentBuffs() → StartRound()（下一玩家回合）           │</span><br><span class="line">└──────────────────────────────────────────────────────────────┘</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="3-2-玩家回合开始-StartRound"><a href="#3-2-玩家回合开始-StartRound" class="headerlink" title="3.2 玩家回合开始 StartRound()"></a>3.2 玩家回合开始 <code>StartRound()</code></h3><table>
+<thead>
+<tr>
+<th>步骤</th>
+<th>代码行为</th>
+<th>Buff 时点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><code>RegenerateDiceFromTemplate()</code>：保留上回合 retained 骰子 + 按模板新发 + 每颗触发</td>
+<td><code>DieAcquired</code>（每颗新骰）</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>ShuffleBoard()</code>：随机洗牌地块顺序</td>
+<td>—</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>DecideEnemyIntent()</code>：决定敌人下回合意图</td>
+<td>—</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>_player.ClearDefense()</code>：清空玩家护盾</td>
+<td>—</td>
+</tr>
+<tr>
+<td>5</td>
+<td>重置跨回合追踪变量</td>
+<td>—</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>_roundNumber++</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td>7</td>
+<td>护盾清零时点</td>
+<td><code>ShieldCleared</code>（玩家）</td>
+</tr>
+<tr>
+<td>8</td>
+<td>回合开始 Buff</td>
+<td><code>TurnStart</code>（玩家 + 敌人）</td>
+</tr>
+<tr>
+<td>9</td>
+<td>遍历棋盘召唤物</td>
+<td><code>SummonTurnStart</code> + <code>SummonDamage</code> 管线（若有伤害）</td>
+</tr>
+<tr>
+<td>10</td>
+<td>召唤物 <code>Tick()</code>，归零则移除</td>
+<td>—</td>
+</tr>
+</tbody></table>
+<p><strong>跨回合追踪变量（<code>FillCommonContext</code> 写入 ctx）：</strong></p>
+<table>
+<thead>
+<tr>
+<th>变量</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>_roundNumber</code></td>
+<td>每 N 回合类 Buff（进化等）</td>
+</tr>
+<tr>
+<td><code>_playerDealtDamageThisTurn</code></td>
+<td>饥饿 Buff</td>
+</tr>
+<tr>
+<td><code>_firstFleshUsedThisTurn</code></td>
+<td>血肉首击 Buff</td>
+</tr>
+<tr>
+<td><code>_consecutiveSameValueCount</code></td>
+<td>同点数连击类 Buff</td>
+</tr>
+<tr>
+<td><code>_previousDieValue</code></td>
+<td>连珠炮等递增判定</td>
+</tr>
+</tbody></table>
+<h3 id="3-3-玩家行为"><a href="#3-3-玩家行为" class="headerlink" title="3.3 玩家行为"></a>3.3 玩家行为</h3><h4 id="A-移动-TryMove-dieIndex-targetIndex"><a href="#A-移动-TryMove-dieIndex-targetIndex" class="headerlink" title="A. 移动 TryMove(dieIndex, targetIndex)"></a>A. 移动 <code>TryMove(dieIndex, targetIndex)</code></h4><p><strong>前置校验：</strong> 玩家回合、骰子有效、目标格 &#x3D; 左&#x2F;右折返可达位置</p>
+<p><strong>时点序列（Manager 手写，非完整 ActionPipeline）：</strong></p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">UseDie</span><br><span class="line">  ↓ (若 IsCancelled → 消耗骰子并中止)</span><br><span class="line">Move</span><br><span class="line">  ↓ ResetCombo()（清空连击 Buff）</span><br><span class="line">逐格循环 dieValue 次：</span><br><span class="line">  PassTile（每格）</span><br><span class="line">    └─ 召唤物 OnPassDamage → LoseHp（不走 Buff）</span><br><span class="line">  最后一格：</span><br><span class="line">    EnterTile</span><br><span class="line">    └─ 召唤物 OnEnterDamage → LoseHp + 移除召唤物</span><br><span class="line">    └─ HighestDieUsed = 0, ResetByMove = true（刷新地块使用限制）</span><br><span class="line">消耗骰子 → OnMoved 事件</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>折返算法：</strong> <code>BounceMove(start, steps, boardSize)</code> — 碰边折返，超过 10 格表现层加速（Buff 照常触发）</p>
+<h4 id="B-触发地块-TryActivateTile-dieIndex"><a href="#B-触发地块-TryActivateTile-dieIndex" class="headerlink" title="B. 触发地块 TryActivateTile(dieIndex)"></a>B. 触发地块 <code>TryActivateTile(dieIndex)</code></h4><p><strong>前置校验：</strong></p>
+<ul>
+<li>骰子颜色与地块颜色兼容（<code>tile.Color.CanActivateBy(die.Color)</code>）</li>
+<li><del>点数必须大于本格已用最高点数</del>（<strong>已移除</strong>，反馈#6）</li>
+</ul>
+<p><strong>连击叠层：</strong> 同地块 <code>die.CurrentValue &gt; tile.HighestDieUsed</code> 且 <code>HighestDieUsed &gt; 0</code> → <code>GrantCombo()</code></p>
+<table>
+<thead>
+<tr>
+<th>地块类型</th>
+<th>调用</th>
+<th>管线</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>TileType.Attack</code></td>
+<td><code>ExecuteAttackAction()</code></td>
+<td><code>ActionPipeline.PlayerAttack</code></td>
+</tr>
+<tr>
+<td><code>TileType.Defend</code></td>
+<td><code>ExecuteDefendAction()</code></td>
+<td><code>ActionPipeline.PlayerDefend</code></td>
+</tr>
+</tbody></table>
+<p><strong>攻击后结算：</strong></p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">PlayerAttack 管线 → DrainPendingOps</span><br><span class="line">→ _enemy.TakeDamage(FinalDamage)</span><br><span class="line">→ 吸血 Heal + 溢疗 GainShield 时点</span><br><span class="line">→ TryDyeTile() → DyeTile 时点</span><br><span class="line">→ tile.HighestDieUsed = die.CurrentValue</span><br><span class="line">→ TrackDiceUse()</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>防御后结算：</strong></p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">PlayerDefend 管线 → DrainPendingOps</span><br><span class="line">→ _player.AddDefense(ShieldAmount)</span><br><span class="line">→ TryDyeTile() → DyeTile 时点</span><br><span class="line">→ tile.HighestDieUsed = die.CurrentValue</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="C-结束回合-EndTurn-→-EndPlayerTurn"><a href="#C-结束回合-EndTurn-→-EndPlayerTurn" class="headerlink" title="C. 结束回合 EndTurn() → EndPlayerTurn()"></a>C. 结束回合 <code>EndTurn() → EndPlayerTurn()</code></h4><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">TurnEnd（玩家）</span><br><span class="line">  ↓</span><br><span class="line">弃置未保留骰子 → 每颗 DieDiscarded</span><br><span class="line">保留骰子 → ClearRetain()</span><br><span class="line">  ↓</span><br><span class="line">召唤物：站在同格 → OnEndTurnShield 直接加盾</span><br><span class="line">         → SummonTurnEnd 时点</span><br><span class="line">  ↓</span><br><span class="line">EnemyTurnRoutine() 协程</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p><strong>注意：</strong> 玩家 Buff 的 <code>TickBuffs()</code> <strong>不在</strong> <code>EndPlayerTurn</code> 中执行，而是移到敌人攻击之后，确保「脆弱」等受击 Buff 对本回合敌人攻击仍生效。</p>
+</blockquote>
+<h3 id="3-4-敌人回合-EnemyTurnRoutine"><a href="#3-4-敌人回合-EnemyTurnRoutine" class="headerlink" title="3.4 敌人回合 EnemyTurnRoutine()"></a>3.4 敌人回合 <code>EnemyTurnRoutine()</code></h3><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">_turnState = EnemyTurn</span><br><span class="line">_enemy.ClearDefense()</span><br><span class="line">ShieldCleared（敌人）</span><br><span class="line">TurnStart（敌人）</span><br><span class="line">  ↓ [等待 enemyTurnStartBeat]</span><br><span class="line">ExecuteEnemyIntentRoutine()</span><br><span class="line">  ├─ 有伤害 → ExecuteEnemyAttack → EnemyAttack 管线 → TakeDamage</span><br><span class="line">  ├─ 有护盾 → ExecuteEnemyDefend → EnemyDefend 管线 → AddDefense</span><br><span class="line">  ├─ _player.TickBuffs()（攻击后、施加新意图 Buff 前）</span><br><span class="line">  └─ ApplyIntentBuffs()（意图自带 Buff 加到双方）</span><br><span class="line">TurnEnd（敌人）</span><br><span class="line">_enemy.TickBuffs()</span><br><span class="line">  ↓</span><br><span class="line">StartRound()（下一玩家回合）</span><br></pre></td></tr></table></figure></div>
+
+<hr>
+<h2 id="四、行为管线与时点序列"><a href="#四、行为管线与时点序列" class="headerlink" title="四、行为管线与时点序列"></a>四、行为管线与时点序列</h2><h3 id="4-1-ActionPipeline-机制"><a href="#4-1-ActionPipeline-机制" class="headerlink" title="4.1 ActionPipeline 机制"></a>4.1 ActionPipeline 机制</h3><p>文件：<code>Buff/ActionPipeline.cs</code></p>
+<p>每个行为 &#x3D; 有序的 <code>ActionPipelineStep[]</code>，每步指定：</p>
+<ul>
+<li><code>BuffTriggerPoint</code>：触发哪个时点</li>
+<li><code>PipelineMode</code>：<code>Single</code>（只跑源实体）或 <code>Dual</code>（源 + 目标都跑）</li>
+</ul>
+<p><strong>Dual 模式执行顺序：</strong></p>
+<div class="code-container" data-rel="Csharp"><figure class="iseeu highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ctx.IsRunningOnTarget = <span class="literal">false</span>;</span><br><span class="line">BuffPipeline.Execute(triggerPoint, ctx, source);   <span class="comment">// 攻击方 Buff</span></span><br><span class="line">ctx.IsRunningOnTarget = <span class="literal">true</span>;</span><br><span class="line">BuffPipeline.Execute(triggerPoint, ctx, target);   <span class="comment">// 受击方 Buff</span></span><br><span class="line">ctx.IsRunningOnTarget = <span class="literal">false</span>;</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="4-2-预定义管线对照表"><a href="#4-2-预定义管线对照表" class="headerlink" title="4.2 预定义管线对照表"></a>4.2 预定义管线对照表</h3><h4 id="玩家攻击-PlayerAttack"><a href="#玩家攻击-PlayerAttack" class="headerlink" title="玩家攻击 PlayerAttack"></a>玩家攻击 <code>PlayerAttack</code></h4><table>
+<thead>
+<tr>
+<th>序号</th>
+<th>时点</th>
+<th>模式</th>
+<th>跑 Buff 的实体</th>
+<th>典型效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><code>UseDie</code></td>
+<td>Single</td>
+<td>玩家</td>
+<td>独角、种子心脏、狂乱</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>ActivateTile</code></td>
+<td>Single</td>
+<td>玩家</td>
+<td>骰子颜色虚弱</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>Attack</code></td>
+<td><strong>Dual</strong></td>
+<td>玩家→敌人</td>
+<td>强壮(+伤害)、初始脑袋</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>Hit</code></td>
+<td><strong>Dual</strong></td>
+<td>玩家→敌人</td>
+<td>触手2、施加脆弱</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>DealDamage</code></td>
+<td>Single</td>
+<td>玩家</td>
+<td>虚弱(-50%伤害)、吸血</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>HitTaken</code></td>
+<td>Single</td>
+<td>玩家</td>
+<td>—</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>DamageTaken</code></td>
+<td><strong>Dual</strong></td>
+<td>敌人→玩家</td>
+<td>脆弱(+50%受伤)、藤蔓身体</td>
+</tr>
+</tbody></table>
+<p><strong>结算时机：</strong> 管线跑完后 <code>_enemy.TakeDamage(ctx.FinalDamage)</code></p>
+<h4 id="玩家防御-PlayerDefend"><a href="#玩家防御-PlayerDefend" class="headerlink" title="玩家防御 PlayerDefend"></a>玩家防御 <code>PlayerDefend</code></h4><table>
+<thead>
+<tr>
+<th>序号</th>
+<th>时点</th>
+<th>模式</th>
+<th>典型效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><code>UseDie</code></td>
+<td>Single</td>
+<td>—</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>ActivateTile</code></td>
+<td>Single</td>
+<td>骰子颜色虚弱</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>Defend</code></td>
+<td>Single</td>
+<td>敏捷(+护盾)、启示</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>GainShield</code></td>
+<td>Single</td>
+<td>木头脑袋(低点点数翻倍)</td>
+</tr>
+</tbody></table>
+<p><strong>结算时机：</strong> <code>_player.AddDefense(ctx.ShieldAmount)</code></p>
+<h4 id="玩家移动（Manager-手写，管线仅定义前-4-步）"><a href="#玩家移动（Manager-手写，管线仅定义前-4-步）" class="headerlink" title="玩家移动（Manager 手写，管线仅定义前 4 步）"></a>玩家移动（Manager 手写，管线仅定义前 4 步）</h4><table>
+<thead>
+<tr>
+<th>时点</th>
+<th>触发位置</th>
+<th>典型效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>UseDie</code></td>
+<td>TryMove 开头</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>Move</code></td>
+<td>TryMove</td>
+<td>移动回复(Haste)</td>
+</tr>
+<tr>
+<td><code>PassTile</code></td>
+<td>逐格循环</td>
+<td>路径免疫</td>
+</tr>
+<tr>
+<td><code>EnterTile</code></td>
+<td>最后一格</td>
+<td>吸盘、叶之翼、疤痕</td>
+</tr>
+</tbody></table>
+<h4 id="怪物攻击-EnemyAttack"><a href="#怪物攻击-EnemyAttack" class="headerlink" title="怪物攻击 EnemyAttack"></a>怪物攻击 <code>EnemyAttack</code></h4><table>
+<thead>
+<tr>
+<th>序号</th>
+<th>时点</th>
+<th>模式</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><code>Attack</code></td>
+<td>Dual</td>
+<td>敌人强壮 + 玩家（若有攻击相关）</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>Hit</code></td>
+<td>Dual</td>
+<td>—</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>DealDamage</code></td>
+<td>Single</td>
+<td>敌人虚弱</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>HitTaken</code></td>
+<td>Single</td>
+<td>玩家荆棘</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>DamageTaken</code></td>
+<td>Dual</td>
+<td>玩家脆弱&#x2F;裂隙之中</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>怪物攻击<strong>不含</strong> UseDie、ActivateTile、DyeTile（与设计文档一致）</p>
+</blockquote>
+<h4 id="怪物防御-EnemyDefend"><a href="#怪物防御-EnemyDefend" class="headerlink" title="怪物防御 EnemyDefend"></a>怪物防御 <code>EnemyDefend</code></h4><table>
+<thead>
+<tr>
+<th>时点</th>
+<th>典型效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Defend</code></td>
+<td>敌人敏捷</td>
+</tr>
+<tr>
+<td><code>GainShield</code></td>
+<td>—</td>
+</tr>
+</tbody></table>
+<h4 id="召唤物伤害-SummonDamage"><a href="#召唤物伤害-SummonDamage" class="headerlink" title="召唤物伤害 SummonDamage"></a>召唤物伤害 <code>SummonDamage</code></h4><table>
+<thead>
+<tr>
+<th>时点</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>DealDamage</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>HitTaken</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>DamageTaken</code></td>
+<td>玩家受伤类 Buff</td>
+</tr>
+</tbody></table>
+<h3 id="4-3-染色时点（攻击-防御后单独触发）"><a href="#4-3-染色时点（攻击-防御后单独触发）" class="headerlink" title="4.3 染色时点（攻击&#x2F;防御后单独触发）"></a>4.3 染色时点（攻击&#x2F;防御后单独触发）</h3><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">TryDyeTile(die, tile, ctx)</span><br><span class="line">  条件：die.Color != None 且 tile.Color.ShouldRecolorBy(die.Color)</span><br><span class="line">  行为：tile.Color = tile.Color.DyedBy(die.Color)</span><br><span class="line">  时点：DyeTile（Single，玩家）</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="4-4-完整时点枚举"><a href="#4-4-完整时点枚举" class="headerlink" title="4.4 完整时点枚举"></a>4.4 完整时点枚举</h3><p>文件：<code>Buff/BuffTriggerPoint.cs</code></p>
+<p><strong>行为管道：</strong></p>
+<p><code>UseDie</code> → <code>Move</code> → <code>PassTile</code> → <code>EnterTile</code> → <code>ActivateTile</code> → <code>Attack</code> → <code>Hit</code> → <code>DealDamage</code> → <code>HitTaken</code> → <code>DamageTaken</code> → <code>Defend</code> → <code>GainShield</code> → <code>DyeTile</code> → <code>EatFood</code></p>
+<p><strong>回合&#x2F;骰子&#x2F;战斗：</strong></p>
+<p><code>TurnStart</code> &#x2F; <code>TurnEnd</code> &#x2F; <code>ShieldCleared</code> &#x2F; <code>DieDiscarded</code> &#x2F; <code>DieRetained</code> &#x2F; <code>DieDestroyed</code> &#x2F; <code>DieUpgraded</code> &#x2F; <code>DieRerolled</code> &#x2F; <code>DieAcquired</code> &#x2F; <code>BattleStart</code> &#x2F; <code>BattleEnd</code> &#x2F; <code>Death</code> &#x2F; <code>SummonTurnStart</code> &#x2F; <code>SummonTurnEnd</code></p>
+<p><strong>待定：</strong> <code>BuffGained</code> &#x2F; <code>BuffApplied</code> &#x2F; <code>SummonCreated</code></p>
+<hr>
+<h2 id="五、Buff-系统"><a href="#五、Buff-系统" class="headerlink" title="五、Buff 系统"></a>五、Buff 系统</h2><h3 id="5-1-三层结构"><a href="#5-1-三层结构" class="headerlink" title="5.1 三层结构"></a>5.1 三层结构</h3><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">IBuff（模板接口）</span><br><span class="line">    ↓ 实例化</span><br><span class="line">BuffInstance（运行时：层数 + 持续时间 + 来源）</span><br><span class="line">    ↓ 挂在</span><br><span class="line">ICombatEntity.Buffs（玩家/敌人 Buff 列表）</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="5-2-BuffPipeline-执行规则"><a href="#5-2-BuffPipeline-执行规则" class="headerlink" title="5.2 BuffPipeline 执行规则"></a>5.2 BuffPipeline 执行规则</h3><p>文件：<code>Buff/BuffPipeline.cs</code></p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">筛选：!IsExpired &amp;&amp; TriggerPoint 匹配 &amp;&amp; Condition(ctx) 通过</span><br><span class="line">排序：Priority 升序（1=最先）</span><br><span class="line">执行前：ctx.CurrentStacks = buff.Stacks</span><br><span class="line">        ctx.CurrentOwner = entity</span><br><span class="line">执行：buff.Template.Execute(ctx)</span><br><span class="line">中断：ctx.IsCancelled == true</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="5-3-三种-Buff-实现"><a href="#5-3-三种-Buff-实现" class="headerlink" title="5.3 三种 Buff 实现"></a>5.3 三种 Buff 实现</h3><table>
+<thead>
+<tr>
+<th>方式</th>
+<th>入口</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>BuffCatalog</strong></td>
+<td><code>BuffCatalog.Create(&quot;强壮&quot;)</code></td>
+<td>游戏内主要 Buff，中英键名</td>
+</tr>
+<tr>
+<td><strong>SO 数据驱动</strong></td>
+<td><code>SO_BuffData.ToBuff()</code> → <code>ScriptableBuff</code></td>
+<td>策划配置简单数值效果</td>
+</tr>
+<tr>
+<td><strong>CombatBuffFactory</strong></td>
+<td><code>CombatBuffFactory.Create(CombatBuffId)</code></td>
+<td>肢体&#x2F;装备枚举 ID</td>
+</tr>
+</tbody></table>
+<p><strong>SO 回退规则：</strong> <code>SO_BuffData.effects</code> 为空时，按 <code>buffName</code> 查 <code>BuffCatalog</code>（SO 仅作元数据壳）。</p>
+<h3 id="5-4-层数与持续时间"><a href="#5-4-层数与持续时间" class="headerlink" title="5.4 层数与持续时间"></a>5.4 层数与持续时间</h3><table>
+<thead>
+<tr>
+<th>类型</th>
+<th><code>StacksAreDuration</code></th>
+<th>Tick 行为</th>
+<th>叠层规则</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>强壮&#x2F;敏捷&#x2F;虚弱&#x2F;脆弱</td>
+<td><code>true</code></td>
+<td>层数 &#x3D; 剩余回合，同步衰减</td>
+<td>叠层后 RemainingDuration &#x3D; Stacks</td>
+</tr>
+<tr>
+<td>连击&#x2F;永久类</td>
+<td><code>false</code></td>
+<td>只减 RemainingDuration</td>
+<td>层数独立累加</td>
+</tr>
+</tbody></table>
+<p><strong><code>BuffInstance.GrantInto()</code></strong> 是统一的施加&#x2F;叠层入口（Manager 和测试共用）。</p>
+<h3 id="5-5-副作用延迟队列"><a href="#5-5-副作用延迟队列" class="headerlink" title="5.5 副作用延迟队列"></a>5.5 副作用延迟队列</h3><p>Buff 执行中不能直接改实体，通过 <code>BattleContext.PendingOps</code> 入队：</p>
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>PendingOpKind</th>
+<th>Manager 消费</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>GrantSelf/GrantOpponent</code></td>
+<td>GrantBuff</td>
+<td>BuffCatalog + GrantInto</td>
+</tr>
+<tr>
+<td><code>QueueAddDice</code></td>
+<td>AddDice</td>
+<td>AddDice() → DieAcquired</td>
+</tr>
+<tr>
+<td><code>QueueSelfDamage</code></td>
+<td>SelfDamage</td>
+<td>LoseHp（不触发 Buff）</td>
+</tr>
+<tr>
+<td><code>QueueHeal</code></td>
+<td>Heal</td>
+<td>Heal()</td>
+</tr>
+<tr>
+<td><code>QueueGainShield</code></td>
+<td>GainShield</td>
+<td>AddDefense()</td>
+</tr>
+<tr>
+<td><code>QueueRemoveDie</code></td>
+<td>RemoveDie</td>
+<td>从池移除</td>
+</tr>
+<tr>
+<td><code>QueueRerollDie</code></td>
+<td>RerollDie</td>
+<td>RerollDie() → DieRerolled</td>
+</tr>
+</tbody></table>
+<p><strong>直接改骰子（不走队列）：</strong> <code>die.Upgrade()</code> &#x2F; <code>die.Retain()</code> — Manager 通过快照补发 <code>DieUpgraded</code> &#x2F; <code>DieRetained</code>。</p>
+<h3 id="5-6-代表性-Buff-与时点映射"><a href="#5-6-代表性-Buff-与时点映射" class="headerlink" title="5.6 代表性 Buff 与时点映射"></a>5.6 代表性 Buff 与时点映射</h3><table>
+<thead>
+<tr>
+<th>Buff</th>
+<th>时点</th>
+<th>条件要点</th>
+<th>效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>强壮</td>
+<td>Attack</td>
+<td>攻击方 <code>!IsRunningOnTarget</code></td>
+<td>FinalDamage +&#x3D; 层数</td>
+</tr>
+<tr>
+<td>敏捷</td>
+<td>Defend</td>
+<td>IsDefense</td>
+<td>ShieldAmount +&#x3D; 层数</td>
+</tr>
+<tr>
+<td>虚弱</td>
+<td>DealDamage</td>
+<td>攻击方</td>
+<td>FinalDamage -&#x3D; 50%</td>
+</tr>
+<tr>
+<td>脆弱</td>
+<td>DamageTaken</td>
+<td>受击方 <code>IsRunningOnTarget</code></td>
+<td>FinalDamage +&#x3D; 50%</td>
+</tr>
+<tr>
+<td>连击(攻击)</td>
+<td>Attack</td>
+<td>IsAttack</td>
+<td>FinalDamage +&#x3D; 层数</td>
+</tr>
+<tr>
+<td>饥饿</td>
+<td>TurnEnd</td>
+<td>本回合未造成伤害</td>
+<td>QueueSelfDamage(5)</td>
+</tr>
+<tr>
+<td>藤蔓身体</td>
+<td>DamageTaken</td>
+<td>受击 &amp; 伤害≥5</td>
+<td>每 5 点伤获得 1 个植物 d4</td>
+</tr>
+<tr>
+<td>触手2</td>
+<td>Hit</td>
+<td>血肉攻击</td>
+<td>伤害×2，OneShot 失效</td>
+</tr>
+<tr>
+<td>进化</td>
+<td>TurnStart</td>
+<td>每 3 回合</td>
+<td>GrantSelf 永久强壮&#x2F;敏捷</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="六、BattleContext-上下文"><a href="#六、BattleContext-上下文" class="headerlink" title="六、BattleContext 上下文"></a>六、BattleContext 上下文</h2><p>文件：<code>Core/BattleContext.cs</code></p>
+<h3 id="6-1-字段分组"><a href="#6-1-字段分组" class="headerlink" title="6.1 字段分组"></a>6.1 字段分组</h3><p><strong>骰子：</strong> <code>UsedDie</code>, <code>DieIndex</code>, <code>DieColor</code></p>
+<p><strong>地块：</strong> <code>SourceTileIndex</code>, <code>TargetTileIndex</code>, <code>TargetTile</code>, <code>Board</code></p>
+<p><strong>数值：</strong> <code>BaseDamage</code>, <code>FinalDamage</code>, <code>HealAmount</code>, <code>ShieldAmount</code></p>
+<p><strong>行为标记：</strong> <code>IsAttack</code>, <code>IsDefense</code>, <code>IsMove</code>, <code>IsTileAction</code>, <code>IsEnemyAction</code>, <code>IsSummonAction</code>, <code>IsCancelled</code></p>
+<p><strong>Buff 基建：</strong> <code>CurrentStacks</code>, <code>CurrentOwner</code>, <code>IsRunningOnTarget</code>, <code>RoundNumber</code>, <code>PlayerDealtDamageThisTurn</code>, <code>PendingOps</code></p>
+<p><strong>染色：</strong> <code>PreviousTileColor</code>, <code>NewTileColor</code></p>
+<p><strong>追踪：</strong> <code>ConsecutiveSameValueCount</code>, <code>PreviousDieValue</code>, <code>IsFirstFleshUseInTurn</code>, <code>IsOverflowHeal</code></p>
+<h3 id="6-2-工厂方法"><a href="#6-2-工厂方法" class="headerlink" title="6.2 工厂方法"></a>6.2 工厂方法</h3><div class="code-container" data-rel="Csharp"><figure class="iseeu highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">BattleContext.ForAttack(die, tileIndex, baseDamage, isEnemyAction)</span><br><span class="line">BattleContext.ForDefense(die, tileIndex, shieldAmount, isEnemyAction)</span><br><span class="line">BattleContext.ForMove(die, fromTile, toTile)</span><br></pre></td></tr></table></figure></div>
+
+<hr>
+<h2 id="七、TatakaiManager-调度中枢"><a href="#七、TatakaiManager-调度中枢" class="headerlink" title="七、TatakaiManager 调度中枢"></a>七、TatakaiManager 调度中枢</h2><h3 id="7-1-两种-Buff-触发入口"><a href="#7-1-两种-Buff-触发入口" class="headerlink" title="7.1 两种 Buff 触发入口"></a>7.1 两种 Buff 触发入口</h3><table>
+<thead>
+<tr>
+<th>入口</th>
+<th>用途</th>
+<th>是否 DrainPendingOps</th>
+<th>是否补发骰子时点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Exec(triggerPoint, ctx, entity)</code></td>
+<td>单时点（回合开始、弃骰等）</td>
+<td>✅</td>
+<td>✅（快照对比）</td>
+</tr>
+<tr>
+<td><code>ActionPipeline.X.Execute(ctx, src, tgt)</code></td>
+<td>行为管线（攻击&#x2F;防御）</td>
+<td>管线后手动调用</td>
+<td>❌（管线内逐步 Exec 时由外层控制）</td>
+</tr>
+</tbody></table>
+<p><strong><code>Exec()</code> 内部流程：</strong></p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">拍骰子池快照（UpgradeCount / IsRetained）</span><br><span class="line">  → BuffPipeline.Execute</span><br><span class="line">  → DrainPendingOps</span><br><span class="line">  → EmitDieLifecycleChanges（补发 DieUpgraded / DieRetained）</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="7-2-意图预览（Dry-Run）"><a href="#7-2-意图预览（Dry-Run）" class="headerlink" title="7.2 意图预览（Dry-Run）"></a>7.2 意图预览（Dry-Run）</h3><p>敌人意图 UI 显示「含 Buff 后的预期值」：</p>
+<div class="code-container" data-rel="Csharp"><figure class="iseeu highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">PreviewEnemyAttack(baseDamage):</span><br><span class="line">  ctx = ForAttack(<span class="literal">null</span>, <span class="number">-1</span>, baseDamage, isEnemyAction: <span class="literal">true</span>)</span><br><span class="line">  BuffPipeline.Execute(Attack, ctx, _enemy)  <span class="comment">// 只跑 Attack 时点</span></span><br><span class="line">  <span class="keyword">return</span> ctx.FinalDamage  <span class="comment">// 不 DrainPendingOps，无副作用</span></span><br></pre></td></tr></table></figure></div>
+
+<h3 id="7-3-连击-Buff-管理（Manager-特化逻辑）"><a href="#7-3-连击-Buff-管理（Manager-特化逻辑）" class="headerlink" title="7.3 连击 Buff 管理（Manager 特化逻辑）"></a>7.3 连击 Buff 管理（Manager 特化逻辑）</h3><p>不在 BuffCatalog 的 Tick 流程中，由 Manager 直接操作：</p>
+<ul>
+<li><strong>叠层：</strong> 同地块用更大点数骰子 → <code>GrantCombo(isAttack)</code></li>
+<li><strong>清零：</strong> 移动时 <code>ResetCombo()</code> 移除连击(攻击)&#x2F;连击(防御)</li>
+</ul>
+<h3 id="7-4-Buff-Tick-时机（重要实现细节）"><a href="#7-4-Buff-Tick-时机（重要实现细节）" class="headerlink" title="7.4 Buff Tick 时机（重要实现细节）"></a>7.4 Buff Tick 时机（重要实现细节）</h3><table>
+<thead>
+<tr>
+<th>实体</th>
+<th>Tick 时机</th>
+<th>原因</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>敌人</td>
+<td>敌人 TurnEnd 后</td>
+<td>标准回合衰减</td>
+</tr>
+<tr>
+<td>玩家</td>
+<td>敌人攻击后、ApplyIntentBuffs 前</td>
+<td>确保脆弱等对本次攻击生效；新意图 Buff 不被立刻 Tick 掉</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="八、地块、染色与召唤物"><a href="#八、地块、染色与召唤物" class="headerlink" title="八、地块、染色与召唤物"></a>八、地块、染色与召唤物</h2><h3 id="8-1-地块-Stage"><a href="#8-1-地块-Stage" class="headerlink" title="8.1 地块 Stage"></a>8.1 地块 <code>Stage</code></h3><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>TileType</code></td>
+<td>Attack &#x2F; Defend</td>
+</tr>
+<tr>
+<td><code>Color</code></td>
+<td><code>TileColor</code>（支持单色&#x2F;双色）</td>
+</tr>
+<tr>
+<td><code>Summon</code></td>
+<td>召唤物数据</td>
+</tr>
+<tr>
+<td><code>HighestDieUsed</code></td>
+<td>本格已用最高骰点（移动经过时重置为 0）</td>
+</tr>
+<tr>
+<td><code>ResetByMove</code></td>
+<td>是否被移动刷新</td>
+</tr>
+</tbody></table>
+<h3 id="8-2-染色规则-TileColor"><a href="#8-2-染色规则-TileColor" class="headerlink" title="8.2 染色规则 TileColor"></a>8.2 染色规则 <code>TileColor</code></h3><p>文件：<code>Core/TileColor.cs</code></p>
+<ul>
+<li><strong>触发染色：</strong> 骰子颜色 ⊄ 地块颜色 → <code>DyedBy(dieColor)</code></li>
+<li><strong>不染色：</strong> 骰子颜色已是地块主色或副色之一</li>
+<li><strong>多彩兼容单彩：</strong> 血肉+植物格子上，血肉骰子可触发效果</li>
+</ul>
+<h3 id="8-3-召唤物-SummonData"><a href="#8-3-召唤物-SummonData" class="headerlink" title="8.3 召唤物 SummonData"></a>8.3 召唤物 <code>SummonData</code></h3><table>
+<thead>
+<tr>
+<th>效果字段</th>
+<th>触发时机</th>
+<th>是否走 Buff</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>OnTurnStartDamage</code></td>
+<td>玩家回合开始</td>
+<td>SummonDamage 管线 + 直接 TakeDamage</td>
+</tr>
+<tr>
+<td><code>OnPassDamage</code></td>
+<td>移动经过</td>
+<td>直接 LoseHp</td>
+</tr>
+<tr>
+<td><code>OnEnterDamage</code></td>
+<td>移动进入</td>
+<td>直接 LoseHp + 移除召唤物</td>
+</tr>
+<tr>
+<td><code>OnEndTurnShield</code></td>
+<td>玩家回合结束站在同格</td>
+<td>直接 AddDefense</td>
+</tr>
+<tr>
+<td><code>Duration</code></td>
+<td>每回合开始 Tick</td>
+<td>归零移除</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>设计文档：「失去生命值」不触发 Buff — 代码中 <code>LoseHp()</code> 直接扣血，不走管线。</p>
+</blockquote>
+<hr>
+<h2 id="九、骰子生命周期"><a href="#九、骰子生命周期" class="headerlink" title="九、骰子生命周期"></a>九、骰子生命周期</h2><h3 id="9-1-每回合发牌-RegenerateDiceFromTemplate"><a href="#9-1-每回合发牌-RegenerateDiceFromTemplate" class="headerlink" title="9.1 每回合发牌 RegenerateDiceFromTemplate()"></a>9.1 每回合发牌 <code>RegenerateDiceFromTemplate()</code></h3><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">保留上回合 retained 骰子（原样带入，不重摇）</span><br><span class="line">  +</span><br><span class="line">按 _diceTemplate 克隆新骰子（ClearRetain + Roll）</span><br><span class="line">  → 每颗新骰 Exec(DieAcquired)</span><br><span class="line">  → SortDicePool()</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="9-2-骰子时点补发机制"><a href="#9-2-骰子时点补发机制" class="headerlink" title="9.2 骰子时点补发机制"></a>9.2 骰子时点补发机制</h3><p>Buff 中直接调用 <code>die.Upgrade()</code> &#x2F; <code>die.Retain()</code> 不会自动触发时点。<code>Exec()</code> 通过快照对比补发：</p>
+<table>
+<thead>
+<tr>
+<th>检测</th>
+<th>补发时点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>UpgradeCount</code> 增加</td>
+<td><code>DieUpgraded</code></td>
+</tr>
+<tr>
+<td><code>IsRetained</code> false→true</td>
+<td><code>DieRetained</code></td>
+</tr>
+</tbody></table>
+<h3 id="9-3-弃置与保留"><a href="#9-3-弃置与保留" class="headerlink" title="9.3 弃置与保留"></a>9.3 弃置与保留</h3><p><strong>回合结束：</strong></p>
+<ul>
+<li><code>IsRetained == true</code> → <code>ClearRetain()</code>，保留在池中带入下回合</li>
+<li>否则 → <code>Exec(DieDiscarded)</code> → 从池移除</li>
+</ul>
+<blockquote>
+<p>回合结束自动弃置的骰子<strong>不算</strong> DieDiscarded 的设计意图在代码中：未保留的骰子会触发 DieDiscarded。</p>
+</blockquote>
+<h3 id="9-4-手牌排序"><a href="#9-4-手牌排序" class="headerlink" title="9.4 手牌排序"></a>9.4 手牌排序</h3><p><code>SortDicePool()</code>：颜色 → 点数升序 → 面数</p>
+<hr>
+<h2 id="十、敌人意图与-AI"><a href="#十、敌人意图与-AI" class="headerlink" title="十、敌人意图与 AI"></a>十、敌人意图与 AI</h2><h3 id="10-1-意图决定-DecideEnemyIntent"><a href="#10-1-意图决定-DecideEnemyIntent" class="headerlink" title="10.1 意图决定 DecideEnemyIntent()"></a>10.1 意图决定 <code>DecideEnemyIntent()</code></h3><p>优先级：</p>
+<ol>
+<li><strong>脚本意图</strong>（<code>scriptedIntents</code>）：教学敌人按回合顺序</li>
+<li><strong>强制攻击</strong>：第 1 回合必攻击；上回合 Special 意图 → 本回合必攻击</li>
+<li><strong>意图池</strong>：条件意图（按 priority）→ 加权随机</li>
+<li><strong>兜底</strong>：50% 随机攻&#x2F;防 + Inspector 固定值</li>
+</ol>
+<h3 id="10-2-条件意图"><a href="#10-2-条件意图" class="headerlink" title="10.2 条件意图"></a>10.2 条件意图</h3><table>
+<thead>
+<tr>
+<th>IntentCondition</th>
+<th>判定</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>FirstTurn</code></td>
+<td><code>_enemyTurnCount == 1</code></td>
+</tr>
+<tr>
+<td><code>HpBelowValue</code></td>
+<td>当前 HP ≤ conditionValue</td>
+</tr>
+<tr>
+<td><code>HpBelowPercent</code></td>
+<td>HP 比例 ≤ conditionValue</td>
+</tr>
+</tbody></table>
+<h3 id="10-3-意图执行-ExecuteEnemyIntentRoutine"><a href="#10-3-意图执行-ExecuteEnemyIntentRoutine" class="headerlink" title="10.3 意图执行 ExecuteEnemyIntentRoutine()"></a>10.3 意图执行 <code>ExecuteEnemyIntentRoutine()</code></h3><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">有 damage → ExecuteEnemyAttack(EnemyAttack 管线) → TakeDamage</span><br><span class="line">有 shield → ExecuteEnemyDefend(EnemyDefend 管线) → AddDefense</span><br><span class="line">_player.TickBuffs()</span><br><span class="line">ApplyIntentBuffs()（selfBuffs → 敌人，targetBuffs → 玩家）</span><br></pre></td></tr></table></figure></div>
+
+<h3 id="10-4-意图-Buff-施加"><a href="#10-4-意图-Buff-施加" class="headerlink" title="10.4 意图 Buff 施加"></a>10.4 意图 Buff 施加</h3><div class="code-container" data-rel="Csharp"><figure class="iseeu highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">AddIntentBuff(target, BuffPayload):</span><br><span class="line">  template = p.buffData.ToBuff()</span><br><span class="line">  target.Buffs.Add(<span class="keyword">new</span> BuffInstance(template, duration, stacks))</span><br></pre></td></tr></table></figure></div>
+
+<p>与 <code>GrantInto</code> 不同：意图 Buff <strong>不合并叠层</strong>，直接 Add 新实例。</p>
+<hr>
+<h2 id="十一、设计文档与代码对照"><a href="#十一、设计文档与代码对照" class="headerlink" title="十一、设计文档与代码对照"></a>十一、设计文档与代码对照</h2><table>
+<thead>
+<tr>
+<th>设计文档</th>
+<th>代码实现</th>
+<th>差异</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>同地块点数递增才能再触发</td>
+<td>HighestDieUsed 仍记录</td>
+<td><strong>门槛已移除</strong>（反馈#6）</td>
+</tr>
+<tr>
+<td>玩家攻击含染色时点</td>
+<td>PlayerAttack 管线后 TryDyeTile</td>
+<td>✅ 一致</td>
+</tr>
+<tr>
+<td>怪物攻击不含 UseDie&#x2F;ActivateTile</td>
+<td>EnemyAttack 从 Attack 开始</td>
+<td>✅ 一致</td>
+</tr>
+<tr>
+<td>失去生命值不触发 Buff</td>
+<td><code>LoseHp()</code> 直接扣血</td>
+<td>✅ 一致</td>
+</tr>
+<tr>
+<td>回合结束 Buff 持续时间-1</td>
+<td>TickBuffs()</td>
+<td>玩家 Tick 推迟到敌人攻击后</td>
+</tr>
+<tr>
+<td>层数即持续时间型 Buff</td>
+<td>StacksAreDuration</td>
+<td>✅ 已实现</td>
+</tr>
+<tr>
+<td>获得 buff 时点</td>
+<td>BuffGained</td>
+<td>待定&#x2F;占位</td>
+</tr>
+<tr>
+<td>召唤物移动</td>
+<td>MovePerTurn</td>
+<td>字段存在，移动逻辑未实现</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="十二、文件索引"><a href="#十二、文件索引" class="headerlink" title="十二、文件索引"></a>十二、文件索引</h2><h3 id="核心逻辑"><a href="#核心逻辑" class="headerlink" title="核心逻辑"></a>核心逻辑</h3><table>
+<thead>
+<tr>
+<th>文件</th>
+<th>职责</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>TatakaiManager.cs</code></td>
+<td>战斗中枢：回合、行为、Buff 调度、敌人 AI</td>
+</tr>
+<tr>
+<td><code>Buff/ActionPipeline.cs</code></td>
+<td>行为→时点序列定义</td>
+</tr>
+<tr>
+<td><code>Buff/BuffPipeline.cs</code></td>
+<td>单时点 Buff 筛选与执行</td>
+</tr>
+<tr>
+<td><code>Buff/BuffTriggerPoint.cs</code></td>
+<td>全部时点枚举</td>
+</tr>
+<tr>
+<td><code>Core/BattleContext.cs</code></td>
+<td>行动上下文 + 副作用 API</td>
+</tr>
+<tr>
+<td><code>Core/PendingBuffOp.cs</code></td>
+<td>副作用队列数据结构</td>
+</tr>
+<tr>
+<td><code>Buff/BuffInstance.cs</code></td>
+<td>运行时 Buff + GrantInto</td>
+</tr>
+<tr>
+<td><code>Buff/Buffs/BuffCatalog.cs</code></td>
+<td>主要 Buff 实现注册表</td>
+</tr>
+</tbody></table>
+<h3 id="实体与场景"><a href="#实体与场景" class="headerlink" title="实体与场景"></a>实体与场景</h3><table>
+<thead>
+<tr>
+<th>文件</th>
+<th>职责</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Core/Character.cs</code></td>
+<td>玩家：HP&#x2F;护盾&#x2F;Buff&#x2F;TakeDamage&#x2F;LoseHp</td>
+</tr>
+<tr>
+<td><code>Core/Enemy.cs</code></td>
+<td>敌人：同上</td>
+</tr>
+<tr>
+<td><code>Core/ICombatEntity.cs</code></td>
+<td>战斗实体接口</td>
+</tr>
+<tr>
+<td><code>Core/Stage.cs</code></td>
+<td>地块</td>
+</tr>
+<tr>
+<td><code>Core/TileColor.cs</code></td>
+<td>染色逻辑</td>
+</tr>
+<tr>
+<td><code>Core/SummonData.cs</code></td>
+<td>召唤物</td>
+</tr>
+</tbody></table>
+<h3 id="表现层（不参与逻辑结算）"><a href="#表现层（不参与逻辑结算）" class="headerlink" title="表现层（不参与逻辑结算）"></a>表现层（不参与逻辑结算）</h3><table>
+<thead>
+<tr>
+<th>文件</th>
+<th>职责</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Fronts/TatakaiFrontend.cs</code></td>
+<td>前端总控</td>
+</tr>
+<tr>
+<td><code>Fronts/StageBoard3D.*</code></td>
+<td>3D 棋盘、移动、交互</td>
+</tr>
+<tr>
+<td><code>Fronts/BattleHud.cs</code></td>
+<td>战斗 HUD</td>
+</tr>
+<tr>
+<td><code>Fronts/EnemyIntentView.cs</code></td>
+<td>敌人意图显示</td>
+</tr>
+<tr>
+<td><code>Fronts/BuffRowView.cs</code> &#x2F; <code>BuffTooltip.cs</code></td>
+<td>Buff UI</td>
+</tr>
+</tbody></table>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><table>
+<thead>
+<tr>
+<th>文件</th>
+<th>职责</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>EnemySystem/Test/BattleIntegrationTest.cs</code></td>
+<td>管线集成测试</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="附录：玩家攻击完整时序图"><a href="#附录：玩家攻击完整时序图" class="headerlink" title="附录：玩家攻击完整时序图"></a>附录：玩家攻击完整时序图</h2><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">玩家拖骰子到怪物 → TryActivateTile</span><br><span class="line">│</span><br><span class="line">├─ [可选] GrantCombo（同地块更大点数）</span><br><span class="line">│</span><br><span class="line">└─ ExecuteAttackAction</span><br><span class="line">    │</span><br><span class="line">    ├─ ActionPipeline.PlayerAttack.Execute(ctx, player, enemy)</span><br><span class="line">    │   ├─ UseDie        [玩家 Buff]</span><br><span class="line">    │   ├─ ActivateTile  [玩家 Buff]</span><br><span class="line">    │   ├─ Attack        [玩家 Buff] → [敌人 Buff]  (Dual)</span><br><span class="line">    │   ├─ Hit           [玩家 Buff] → [敌人 Buff]  (Dual)</span><br><span class="line">    │   ├─ DealDamage    [玩家 Buff]</span><br><span class="line">    │   ├─ HitTaken      [玩家 Buff]</span><br><span class="line">    │   └─ DamageTaken   [敌人 Buff] → [玩家 Buff]  (Dual)</span><br><span class="line">    │</span><br><span class="line">    ├─ DrainPendingOps（加 Buff/加骰/回血等）</span><br><span class="line">    │</span><br><span class="line">    ├─ enemy.TakeDamage(FinalDamage)</span><br><span class="line">    │</span><br><span class="line">    ├─ [若有 HealAmount] player.Heal + 溢疗 GainShield 时点</span><br><span class="line">    │</span><br><span class="line">    ├─ TryDyeTile → DyeTile 时点</span><br><span class="line">    │</span><br><span class="line">    └─ TrackDiceUse + 更新 HighestDieUsed</span><br></pre></td></tr></table></figure></div>
+
+<hr>
+<p><em>本文档基于源码静态分析生成，若后续改动 TatakaiManager 或 ActionPipeline，请以代码为准同步更新。</em></p>
+
+		</div>
+
+		
+		<div class="post-copyright-info w-full my-8 px-2 sm:px-6 md:px-8">
+			<div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> 《小匕首》中战斗管线的实现</li>
+        <li><strong>Author:</strong> Seagull OO</li>
+        <li><strong>Created at
+                :</strong> 2026-06-15 18:55:22</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2026-06-16 10:35:09
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://seagulloo.cn/2026/06/15/小匕首中战斗管线的实现/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+		</div>
+		
+
+		
+		<ul class="post-tags-box text-lg mt-1.5 flex-wrap justify-center flex md:hidden">
+			
+			<li class="tag-item mx-0.5">
+				<a href="/tags/Unity/">#Unity</a>&nbsp;
+			</li>
+			
+		</ul>
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2026/06/07/%E5%A6%82%E4%BD%95%E7%94%A8%E6%95%B0%E5%80%BC%E9%87%8F%E5%8C%96%E6%B8%B8%E6%88%8F%E4%BD%93%E9%AA%8C%EF%BC%9F%E2%80%94%E2%80%94%E4%BB%A5%E5%85%BB%E6%88%90%E7%B3%BB%E7%BB%9F%E4%B8%BA%E4%BE%8B/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">如何用数值量化游戏体验？——以养成系统为例</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+		<div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+			<div class="comments-container mt-10 w-full ">
+    <div id="comment-anchor" class="w-full h-2.5"></div>
+    <div class="comment-area-title w-full my-1.5 md:my-2.5 text-xl md:text-3xl font-bold">
+        Comments
+    </div>
+    
+
+        
+            
+    <div id="waline"></div>
+    <script type="module" data-swup-reload-script>
+      import { init } from '/js/libs/waline.js';
+
+      (function() {
+        const startPath = location.pathname;
+        const startTime = Date.now();
+        const retryDelay = 200;
+        const retryLimit = 5000;
+
+        const runWaline = () => {
+          if (location.pathname !== startPath) {
+            return;
+          }
+
+          const container = document.getElementById('waline');
+          if (!container) {
+            if (Date.now() - startTime < retryLimit) {
+              setTimeout(runWaline, retryDelay);
+            }
+            return;
+          }
+
+          if (window.redefineWalineInstance?.destroy) {
+            window.redefineWalineInstance.destroy();
+          }
+
+          container.innerHTML = '';
+          window.redefineWalineInstance = init({
+            el: '#waline',
+            serverURL: 'https://example.example.com',
+            path: location.pathname,
+            dark: 'body[class~="dark-mode"]',
+            reaction: false,
+            requiredMeta: ['nick', 'mail'],
+            emoji: [],
+                      lang: 'zh-CN',
+          });
+        };
+
+        runWaline();
+      })();
+    </script>
+
+
+
+        
+    
+</div>
+
+		</div>
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">《小匕首》中战斗管线的实现</div>
+		<ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E5%BD%95"><span class="nav-text">目录</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E6%A8%A1%E5%9D%97%E6%80%BB%E8%A7%88"><span class="nav-text">一、模块总览</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="nav-text">1.1 目录结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E6%A0%B8%E5%BF%83%E6%9E%B6%E6%9E%84"><span class="nav-text">1.2 核心架构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%88%98%E6%96%97%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-text">二、战斗生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E6%88%98%E6%96%97%E7%9B%AE%E6%A0%87"><span class="nav-text">2.1 战斗目标</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E5%88%9D%E5%A7%8B%E5%8C%96%E6%B5%81%E7%A8%8B"><span class="nav-text">2.2 初始化流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E6%88%98%E6%96%97%E7%BB%93%E6%9D%9F"><span class="nav-text">2.3 战斗结束</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%9B%9E%E5%90%88%E6%B5%81%E7%A8%8B%E8%AF%A6%E8%A7%A3"><span class="nav-text">三、回合流程详解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E5%AE%8C%E6%95%B4%E5%9B%9E%E5%90%88%E5%BE%AA%E7%8E%AF"><span class="nav-text">3.1 完整回合循环</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E7%8E%A9%E5%AE%B6%E5%9B%9E%E5%90%88%E5%BC%80%E5%A7%8B-StartRound"><span class="nav-text">3.2 玩家回合开始 StartRound()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-%E7%8E%A9%E5%AE%B6%E8%A1%8C%E4%B8%BA"><span class="nav-text">3.3 玩家行为</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-%E6%95%8C%E4%BA%BA%E5%9B%9E%E5%90%88-EnemyTurnRoutine"><span class="nav-text">3.4 敌人回合 EnemyTurnRoutine()</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E8%A1%8C%E4%B8%BA%E7%AE%A1%E7%BA%BF%E4%B8%8E%E6%97%B6%E7%82%B9%E5%BA%8F%E5%88%97"><span class="nav-text">四、行为管线与时点序列</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-ActionPipeline-%E6%9C%BA%E5%88%B6"><span class="nav-text">4.1 ActionPipeline 机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E9%A2%84%E5%AE%9A%E4%B9%89%E7%AE%A1%E7%BA%BF%E5%AF%B9%E7%85%A7%E8%A1%A8"><span class="nav-text">4.2 预定义管线对照表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E6%9F%93%E8%89%B2%E6%97%B6%E7%82%B9%EF%BC%88%E6%94%BB%E5%87%BB-%E9%98%B2%E5%BE%A1%E5%90%8E%E5%8D%95%E7%8B%AC%E8%A7%A6%E5%8F%91%EF%BC%89"><span class="nav-text">4.3 染色时点（攻击&#x2F;防御后单独触发）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-4-%E5%AE%8C%E6%95%B4%E6%97%B6%E7%82%B9%E6%9E%9A%E4%B8%BE"><span class="nav-text">4.4 完整时点枚举</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81Buff-%E7%B3%BB%E7%BB%9F"><span class="nav-text">五、Buff 系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E4%B8%89%E5%B1%82%E7%BB%93%E6%9E%84"><span class="nav-text">5.1 三层结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-BuffPipeline-%E6%89%A7%E8%A1%8C%E8%A7%84%E5%88%99"><span class="nav-text">5.2 BuffPipeline 执行规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-3-%E4%B8%89%E7%A7%8D-Buff-%E5%AE%9E%E7%8E%B0"><span class="nav-text">5.3 三种 Buff 实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-4-%E5%B1%82%E6%95%B0%E4%B8%8E%E6%8C%81%E7%BB%AD%E6%97%B6%E9%97%B4"><span class="nav-text">5.4 层数与持续时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-5-%E5%89%AF%E4%BD%9C%E7%94%A8%E5%BB%B6%E8%BF%9F%E9%98%9F%E5%88%97"><span class="nav-text">5.5 副作用延迟队列</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-6-%E4%BB%A3%E8%A1%A8%E6%80%A7-Buff-%E4%B8%8E%E6%97%B6%E7%82%B9%E6%98%A0%E5%B0%84"><span class="nav-text">5.6 代表性 Buff 与时点映射</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81BattleContext-%E4%B8%8A%E4%B8%8B%E6%96%87"><span class="nav-text">六、BattleContext 上下文</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#6-1-%E5%AD%97%E6%AE%B5%E5%88%86%E7%BB%84"><span class="nav-text">6.1 字段分组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-2-%E5%B7%A5%E5%8E%82%E6%96%B9%E6%B3%95"><span class="nav-text">6.2 工厂方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81TatakaiManager-%E8%B0%83%E5%BA%A6%E4%B8%AD%E6%9E%A2"><span class="nav-text">七、TatakaiManager 调度中枢</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#7-1-%E4%B8%A4%E7%A7%8D-Buff-%E8%A7%A6%E5%8F%91%E5%85%A5%E5%8F%A3"><span class="nav-text">7.1 两种 Buff 触发入口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-2-%E6%84%8F%E5%9B%BE%E9%A2%84%E8%A7%88%EF%BC%88Dry-Run%EF%BC%89"><span class="nav-text">7.2 意图预览（Dry-Run）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-3-%E8%BF%9E%E5%87%BB-Buff-%E7%AE%A1%E7%90%86%EF%BC%88Manager-%E7%89%B9%E5%8C%96%E9%80%BB%E8%BE%91%EF%BC%89"><span class="nav-text">7.3 连击 Buff 管理（Manager 特化逻辑）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-4-Buff-Tick-%E6%97%B6%E6%9C%BA%EF%BC%88%E9%87%8D%E8%A6%81%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82%EF%BC%89"><span class="nav-text">7.4 Buff Tick 时机（重要实现细节）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81%E5%9C%B0%E5%9D%97%E3%80%81%E6%9F%93%E8%89%B2%E4%B8%8E%E5%8F%AC%E5%94%A4%E7%89%A9"><span class="nav-text">八、地块、染色与召唤物</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#8-1-%E5%9C%B0%E5%9D%97-Stage"><span class="nav-text">8.1 地块 Stage</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-2-%E6%9F%93%E8%89%B2%E8%A7%84%E5%88%99-TileColor"><span class="nav-text">8.2 染色规则 TileColor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8-3-%E5%8F%AC%E5%94%A4%E7%89%A9-SummonData"><span class="nav-text">8.3 召唤物 SummonData</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81%E9%AA%B0%E5%AD%90%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="nav-text">九、骰子生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#9-1-%E6%AF%8F%E5%9B%9E%E5%90%88%E5%8F%91%E7%89%8C-RegenerateDiceFromTemplate"><span class="nav-text">9.1 每回合发牌 RegenerateDiceFromTemplate()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-2-%E9%AA%B0%E5%AD%90%E6%97%B6%E7%82%B9%E8%A1%A5%E5%8F%91%E6%9C%BA%E5%88%B6"><span class="nav-text">9.2 骰子时点补发机制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-3-%E5%BC%83%E7%BD%AE%E4%B8%8E%E4%BF%9D%E7%95%99"><span class="nav-text">9.3 弃置与保留</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9-4-%E6%89%8B%E7%89%8C%E6%8E%92%E5%BA%8F"><span class="nav-text">9.4 手牌排序</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E6%95%8C%E4%BA%BA%E6%84%8F%E5%9B%BE%E4%B8%8E-AI"><span class="nav-text">十、敌人意图与 AI</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#10-1-%E6%84%8F%E5%9B%BE%E5%86%B3%E5%AE%9A-DecideEnemyIntent"><span class="nav-text">10.1 意图决定 DecideEnemyIntent()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-2-%E6%9D%A1%E4%BB%B6%E6%84%8F%E5%9B%BE"><span class="nav-text">10.2 条件意图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-3-%E6%84%8F%E5%9B%BE%E6%89%A7%E8%A1%8C-ExecuteEnemyIntentRoutine"><span class="nav-text">10.3 意图执行 ExecuteEnemyIntentRoutine()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10-4-%E6%84%8F%E5%9B%BE-Buff-%E6%96%BD%E5%8A%A0"><span class="nav-text">10.4 意图 Buff 施加</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E8%AE%BE%E8%AE%A1%E6%96%87%E6%A1%A3%E4%B8%8E%E4%BB%A3%E7%A0%81%E5%AF%B9%E7%85%A7"><span class="nav-text">十一、设计文档与代码对照</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E6%96%87%E4%BB%B6%E7%B4%A2%E5%BC%95"><span class="nav-text">十二、文件索引</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B8%E5%BF%83%E9%80%BB%E8%BE%91"><span class="nav-text">核心逻辑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E4%BD%93%E4%B8%8E%E5%9C%BA%E6%99%AF"><span class="nav-text">实体与场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%A8%E7%8E%B0%E5%B1%82%EF%BC%88%E4%B8%8D%E5%8F%82%E4%B8%8E%E9%80%BB%E8%BE%91%E7%BB%93%E7%AE%97%EF%BC%89"><span class="nav-text">表现层（不参与逻辑结算）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95"><span class="nav-text">测试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95%EF%BC%9A%E7%8E%A9%E5%AE%B6%E6%94%BB%E5%87%BB%E5%AE%8C%E6%95%B4%E6%97%B6%E5%BA%8F%E5%9B%BE"><span class="nav-text">附录：玩家攻击完整时序图</span></a></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2026&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">Seagull OO</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        13 posts in total
+                    </span>
+                    
+                </p>
+            
+        </div>
+        
+            <script data-swup-reload-script src="https://cn.vercount.one/js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.9.0</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+		<li class="go-comment">
+			<i class="fa-regular fa-comments"></i>
+		</li>
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container" role="dialog" aria-modal="true" aria-label="Image viewer">
+	<button class="image-viewer-close" type="button" aria-label="Close">
+		<i class="fa-solid fa-xmark"></i>
+	</button>
+	<button class="image-viewer-prev" type="button" aria-label="Prev">
+		<i class="fa-solid fa-chevron-left"></i>
+	</button>
+	<div class="image-viewer-frame">
+		<img src="" alt="">
+	</div>
+	<div class="image-viewer-exif-panel hidden absolute left-1/2 bottom-20 -translate-x-1/2 w-[min(92vw,420px)] max-h-[60vh] overflow-hidden rounded-2xl bg-background-color-transparent-80 p-4 text-left shadow-redefine-flat backdrop-blur-md" role="dialog" aria-label="EXIF" aria-hidden="true">
+		<div class="flex items-center justify-between mb-3">
+			<span class="text-sm font-semibold text-first-text-color">EXIF</span>
+			<button class="image-viewer-exif-close flex h-8 w-8 items-center justify-center rounded-full bg-background-color-transparent-80 text-first-text-color transition hover:bg-background-color-transparent-40" type="button" aria-label="Close">
+				<i class="fa-solid fa-xmark text-[0.65rem]"></i>
+			</button>
+		</div>
+		<div class="image-viewer-exif-cards grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[50vh] overflow-y-auto pr-1 scrollbar-hide"></div>
+		<template class="image-viewer-exif-card-template">
+			<div class="rounded-lg bg-background-color-transparent-40 px-3 py-2">
+				<div class="image-viewer-exif-card-header flex items-center gap-2 mb-1">
+					<i class="image-viewer-exif-card-icon fa-solid fa-circle-info text-xs text-third-text-color"></i>
+					<div class="image-viewer-exif-card-title text-xs font-semibold text-first-text-color"></div>
+				</div>
+				<div class="image-viewer-exif-card-items flex flex-col gap-1"></div>
+			</div>
+		</template>
+	</div>
+	<button class="image-viewer-exif-toggle flex items-center gap-2 hidden absolute left-1/2 bottom-6 -translate-x-1/2 rounded-full border border-border-color bg-background-color-transparent-80 px-4 py-2 text-first-text-color backdrop-blur-md transition hover:bg-background-color-transparent-40" type="button" aria-label="EXIF" aria-expanded="false">
+		<i class="fa-solid fa-circle-info text-xs"></i>
+		<span class="text-xs font-semibold uppercase tracking-wider">EXIF</span>
+	</button>
+	<button class="image-viewer-next" type="button" aria-label="Next">
+		<i class="fa-solid fa-chevron-right"></i>
+	</button>
+</div>
+
+
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    window.swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+
+    window.dispatchEvent(
+        new CustomEvent("redefine:swup:ready", {
+            detail: {
+                swup: window.swup,
+            },
+        }),
+    );
+</script>
+
+
+
+
+	
+<script src="/js/build/main.js" type="module"></script>
+
+
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+
+
+
+
+
+
+
+    
+<script src="/js/build/libs/minimasonry.min.js" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+
+	
+</body>
+
+</html>

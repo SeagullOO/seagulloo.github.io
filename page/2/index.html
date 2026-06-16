@@ -78,7 +78,7 @@
     
     <!--- Seo Part-->
     
-    <link rel="canonical" href="http://example.com/categories/游戏/"/>
+    <link rel="canonical" href="http://example.com/page/2/"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
@@ -88,7 +88,7 @@
         <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="海鸥整点百香果">
-<meta property="og:url" content="http://example.com/categories/%E6%B8%B8%E6%88%8F/index.html">
+<meta property="og:url" content="http://example.com/page/2/index.html">
 <meta property="og:site_name" content="海鸥整点百香果">
 <meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
 <meta property="og:locale" content="en_US">
@@ -107,7 +107,7 @@
     
     <title>
         
-            Category: 游戏 | Seagull OO
+            Seagull OO - 泥嚎
         
     </title>
 
@@ -336,6 +336,41 @@
 <main class="page-container" id="swup">
 
 	
+	<style>
+    .home-article-item,
+    .sidebar-links,
+    .sidebar-content,
+    a.page-number,
+    a.extend,
+    .sidebar-links .links:hover,
+    .right-bottom-tools,
+    footer.footer {
+        background-color: var(--background-color-transparent-80) !important;
+    }
+    .right-bottom-tools:hover,
+    a.page-number:hover,
+    a.extend:hover {
+        background-color: var(--primary-color) !important;
+    }
+    .site-info,
+    .home-article-sticky-label {
+        background-color: var(--background-color-transparent-15) !important;
+    }
+    .home-article-sticky-label {
+        backdrop-filter: none !important;
+    }
+    .home-banner-background {
+        filter: blur(15px);
+    }
+</style>
+
+<div class="home-banner-background transition-fade fixed top-0 left-0 w-screen h-screen scale-125 sm:scale-110 box-border will-change-transform bg-cover">
+    <img src="https://i.mji.rip/2026/03/11/9ceaacc84d00f7ad74c1bf8587b71927.jpeg" alt="home-banner-background" class="w-full h-full object-cover dark:hidden">
+    <img src="https://i.mji.rip/2026/03/11/9ceaacc84d00f7ad74c1bf8587b71927.jpeg" alt="home-banner-background" class="w-full h-full object-cover hidden dark:block">
+</div>
+
+
+	
 
 	<div class="main-content-container flex flex-col justify-between min-h-dvh">
 		<div class="main-content-header">
@@ -348,9 +383,9 @@
                 </a>
             
             <a class="logo-title" href="/">
-                
+                <h1>
                 Seagull OO
-                
+                </h1>
             </a>
         </div>
 
@@ -364,7 +399,7 @@
 
                             <li class="navbar-item">
                                 <!-- Menu -->
-                                <a class=""
+                                <a class="active"
                                    href="/"
                                         >
                                     <i class="fa-regular fa-house fa-fw"></i>
@@ -398,7 +433,7 @@
 
                             <li class="navbar-item">
                                 <!-- Menu -->
-                                <a class="active"
+                                <a class=""
                                    href="/categories"
                                         >
                                     <i class="fa-solid fa-folder fa-fw"></i>
@@ -499,7 +534,7 @@
 
                     <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
                         
-                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full active"
                            href="/"
                         >
                             <span>
@@ -539,7 +574,7 @@
 
                     <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
                         
-                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full active"
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
                            href="/categories"
                         >
                             <span>
@@ -635,15 +670,15 @@
 
         <div class="statistics flex justify-around my-2.5">
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">2</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">5</div>
         <div class="label text-third-text-color text-sm">Tags</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">3</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">6</div>
         <div class="label text-third-text-color text-sm">Categories</div>
     </a>
     <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
-        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">5</div>
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">13</div>
         <div class="label text-third-text-color text-sm">Posts</div>
     </a>
 </div>
@@ -658,73 +693,266 @@
 
 		<div class="main-content-body transition-fade-up">
 			
+			<div class="home-sidebar-container">
+    <div class="sticky-container sticky">
+        
+        
+            
+            <div class="sidebar-content" >
+                <div class="avatar flex justify-center">
+    <img src="/images/favicon.svg">
+</div>
+                <div class="author flex flex-col justify-center my-2.5 mx-0">
+    <div class="name">Seagull OO</div>
+    
+        <div class="label">Lv2</div>
+    
+</div>
+                <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">5</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">6</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">13</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+            </div>
+        
+
+    </div>
+</div>
+
+			
 
 			<div class="main-content">
-				<div class="page-template-container">
-	
+				<div class="home-content-container">
+    <ul class="home-article-list">
+        
+            <li class="home-article-item">
 
-	
-	<div class="category-name">
-    <i class="fa-solid fa-folder"></i>&nbsp;游戏
-</div>
-<div class="category-post-list">
-    
-<div class="archive-list-container">
-    
-        <section class="archive-item mb-spacing-unit last:mb-0">
-            <div class="archive-item-header flex flex-row items-center mb-2">
-                <span class="archive-year font-semibold text-3xl mr-2">2026</span>
-                <span class="archive-year-post-count text-xs md:text-sm font-bold rounded-small bg-third-background-color py-[2px] px-[10px] border border-border-color">2</span>
-            </div>
-            
-            <ul class="article-list pl-0 md:pl-8 text-lg leading-[1.5]">
                 
-                    
-                    
-                         <!-- Close the previous LI if not the first item -->
-                        <li class="article-item space-y-2 px-6 pt-10 pb-2 text-xl relative border-l-2 border-border-color" date-is='03-14'>
-                    
-                    <a href="/2026/03/14/%E5%8F%8C%E5%BD%B1%E5%A5%87%E5%A2%83-%E5%B0%8F%E7%BB%93/" class="block w-fit">
-                        <span class="article-title my-0.5 text-2xl">双影奇境-小结</span>
-                    </a>
-                    
+
                 
-                    
+
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-7">
+                    <h3 class="home-article-title">
+                        <a href="/2026/03/13/%E6%98%8E%E6%97%A5%E6%96%B9%E8%88%9F%EF%BC%9A%E7%BB%88%E6%9C%AB%E5%9C%B01-1%E7%89%88%E6%9C%AC%E5%B0%8F%E7%BB%93/">
+                            明日方舟：终末地1.1版本小结
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            目前52级，断断续续打了一周多。今天从下午一点多开始打到六点，过了1.1版本新剧情和伊冯剧情，也算是追着吃了。
+主要还是推主线，角色支线推完，活动只打了密境行者。
+总体体验玩法方面：
+
+集成工业系统：作为特色，在初期十分让人眼前一亮，有钻研的动力。但是到了后期养成压力+有高效蓝图分享你不抄的心理，反而是我40级以后最少碰的玩法。
+资源收集&#x2F;养成：中规中矩，唯二让我觉得麻烦的一个是装...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Fri Mar 13 2026 18:01:59 GMT+0800">
+                
+                    2026-03-13
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
                     
                         
-                            </li>
-                         <!-- Close the previous LI if not the first item -->
-                        <li class="article-item space-y-2 px-6 pt-10 pb-2 text-xl relative border-l-2 border-border-color" date-is='03-13'>
+                        <li>
+                            <a href="/categories/%E6%B8%B8%E6%88%8F%E9%89%B4%E8%B5%8F/">游戏鉴赏</a>&nbsp;
+                        </li>
                     
-                    <a href="/2026/03/13/%E6%98%8E%E6%97%A5%E6%96%B9%E8%88%9F%EF%BC%9A%E7%BB%88%E6%9C%AB%E5%9C%B01-1%E7%89%88%E6%9C%AC%E5%B0%8F%E7%BB%93/" class="block w-fit">
-                        <span class="article-title my-0.5 text-2xl">明日方舟：终末地1.1版本小结</span>
-                    </a>
                     
                 
-                </li> <!-- Ensure the last item is properly closed -->
             </ul>
-        </section>
-    
+        </span>
+        
+        
+            <span class="home-article-tag">
+                <i class="fa-solid fa-tags"></i>&nbsp;
+                <ul>
+                    
+                        <li>
+                            
+                            <a href="/tags/%E6%98%8E%E6%97%A5%E6%96%B9%E8%88%9F%EF%BC%9A%E7%BB%88%E6%9C%AB%E5%9C%B0/">明日方舟：终末地</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            </span>
+        
+    </div>
+
+    <a href="/2026/03/13/%E6%98%8E%E6%97%A5%E6%96%B9%E8%88%9F%EF%BC%9A%E7%BB%88%E6%9C%AB%E5%9C%B01-1%E7%89%88%E6%9C%AC%E5%B0%8F%E7%BB%93/">Read more<span class="seo-reader-text">明日方舟：终末地1.1版本小结</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
+
+                </div>
+            </li>
+        
+            <li class="home-article-item">
+
+                
+
+                
+                    
+                
+
+                
+                    <div id="home-article-thumbnail" class="home-article-thumbnail relative h-[150px] overflow-hidden rounded-t-large">
+                        <a href="/2025/09/13/%E5%AE%89%E7%9F%A5%E9%B1%BC%E4%B8%BB%E9%A2%98%E8%87%AA%E5%AE%9A%E4%B9%89%E6%95%99%E7%A8%8B/">
+                            <img src="https://i.mji.rip/2025/09/16/90a015b86d6ee44c923ae638c84d99bb.webp" alt="安知鱼主题自定义笔记" class="w-full h-full object-cover dark:brightness-75 transition-all" />
+                        </a>
+                    </div>
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-5">
+                    <h3 class="home-article-title">
+                        <a href="/2025/09/13/%E5%AE%89%E7%9F%A5%E9%B1%BC%E4%B8%BB%E9%A2%98%E8%87%AA%E5%AE%9A%E4%B9%89%E6%95%99%E7%A8%8B/">
+                            安知鱼主题自定义笔记
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            前言这是一个基于 安知鱼主题 1.6.14的自定义笔记或者教程，将从最基础的角度进行讲解，这两天都在摸源码进行一些自定义修改，故心血来潮开个坑记录一下方便oo查阅。
+想要了解更多本文中没有出现的自定义行为，可以在评论区留言即使现在还没完成评论区功能。
+文档安知鱼文档：无需多言，感谢安知鱼开源。Markdown语法：刚入门，还是需要多看看写作规范。
+实用方法首先必须要先放一些帮助我们更方便进行...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Sat Sep 13 2025 12:49:42 GMT+0800">
+                
+                    2025-09-13
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/Web/">Web</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+    </div>
+
+    <a href="/2025/09/13/%E5%AE%89%E7%9F%A5%E9%B1%BC%E4%B8%BB%E9%A2%98%E8%87%AA%E5%AE%9A%E4%B9%89%E6%95%99%E7%A8%8B/">Read more<span class="seo-reader-text">安知鱼主题自定义笔记</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
-	
+                </div>
+            </li>
+        
+            <li class="home-article-item">
 
-	<div class="page-template-content markdown-body">
-		
+                
 
-		
-	</div>
+                
+                    
+                
 
-	<div class="page-template-comments">
-		
-	</div>
+                
+                    <div id="home-article-thumbnail" class="home-article-thumbnail relative h-[150px] overflow-hidden rounded-t-large">
+                        <a href="/2025/09/12/Hexo+Github%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E7%AC%94%E8%AE%B0/">
+                            <img src="https://i.mji.rip/2025/09/16/a5d71f6337b45fad836a115a34da5811.png" alt="Hexo+Github搭建个人网站笔记" class="w-full h-full object-cover dark:brightness-75 transition-all" />
+                        </a>
+                    </div>
+                
+                <div class="flex flex-col gap-5 px-7 pb-7 pt-5">
+                    <h3 class="home-article-title">
+                        <a href="/2025/09/12/Hexo+Github%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E7%AC%94%E8%AE%B0/">
+                            Hexo+Github搭建个人网站笔记
+                        </a>
+                    </h3>
+
+                    <div class="home-article-content markdown-body">
+                        
+                            
+                            前言这里是我的第一个博客！我将在这里放一些使用Hexo + Github Pages搭建博客的笔记，以及在期间遇到的一些疑难杂症的解决方法。
+多设备同步更新博客参考教程：多台电脑同步更新Hexo博客
+因为上面放出的教程已经写的很详细了，所以在这里我只是简单为我自己记一个笔记。
+当在一台设备上进行完博客的修改后，在博客目录下进行：
+12$ hexo c$ hexo d -g
+此时可以发现Git...
+                        
+                    </div>
+
+                    <div class="home-article-meta-info-container">
+    <div class="home-article-meta-info">
+        <span><i class="fa-solid fa-calendars"></i>&nbsp;
+            <span class="home-article-date" data-date="Fri Sep 12 2025 18:45:17 GMT+0800">
+                
+                    2025-09-12
+                
+            </span>
+        </span>
+        
+            <span class="home-article-category">
+                <i class="fa-solid fa-folders"></i>&nbsp;
+            <ul>
+                
+                
+                    
+                        
+                        <li>
+                            <a href="/categories/Web/">Web</a>&nbsp;
+                        </li>
+                    
+                    
+                
+            </ul>
+        </span>
+        
+        
+    </div>
+
+    <a href="/2025/09/12/Hexo+Github%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E7%BD%91%E7%AB%99%E7%AC%94%E8%AE%B0/">Read more<span class="seo-reader-text">Hexo+Github搭建个人网站笔记</span>&nbsp;<i class="fa-solid fa-angle-right"></i></a>
 </div>
 
-<div class="paginator">
-	<span class="page-number current">1</span>
+                </div>
+            </li>
+        
+    </ul>
+
+    <div class="home-paginator px-7 py-5">
+        <div class="paginator">
+	<a class="extend prev" rel="prev" href="/"><i class="fa-regular fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
 </div>
   
+    </div>
+</div>
+
 			</div>
 
 			
@@ -745,7 +973,7 @@
                 
                 <p class="post-count space-x-0.5">
                     <span>
-                        5 posts in total
+                        13 posts in total
                     </span>
                     
                 </p>
@@ -926,6 +1154,7 @@
         }),
     );
 </script>
+
 
 
 
