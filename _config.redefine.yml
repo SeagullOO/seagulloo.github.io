@@ -208,7 +208,7 @@ navbar:
   # Navbar width (usually no need to modify)
   width:
     home: 1200px #home page
-    pages: 1000px #other pages
+    pages: 1200px #other pages
   # Navbar links
   links:
     Home: 
@@ -223,6 +223,9 @@ navbar:
     Tags:
         path: /tags
         icon: fa-solid fa-tags # can be empty
+    Wiki:
+      path: /wiki
+      icon: fa-solid fa-book
     Portfolio:
       path: /masonry
       icon: fa-regular fa-link
