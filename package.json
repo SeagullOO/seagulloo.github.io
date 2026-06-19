@@ -12,7 +12,7 @@
     "version": "7.3.0"
   },
   "dependencies": {
-    "ejs": "^3.1.10",
+    "ejs": "^5.0.2",
     "hexo": "^7.0.0",
     "hexo-algoliasearch": "^2.0.1",
     "hexo-butterfly-envelope": "^1.0.15",
