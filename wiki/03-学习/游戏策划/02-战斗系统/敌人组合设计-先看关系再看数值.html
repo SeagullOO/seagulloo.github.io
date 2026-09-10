@@ -78,7 +78,7 @@
     
     <!--- Seo Part-->
     
-    <link rel="canonical" href="http://example.com/wiki/03-学习/游戏策划/02-战斗系统/pvp体验设计：让输家再来一局的归因干预.html"/>
+    <link rel="canonical" href="http://example.com/wiki/03-学习/游戏策划/02-战斗系统/敌人组合设计-先看关系再看数值.html"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
@@ -87,14 +87,14 @@
         
         <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="PVP体验设计：让输家心甘情愿再来一局">
-<meta property="og:url" content="http://example.com/wiki/03-%E5%AD%A6%E4%B9%A0/%E6%B8%B8%E6%88%8F%E7%AD%96%E5%88%92/02-%E6%88%98%E6%96%97%E7%B3%BB%E7%BB%9F/PVP%E4%BD%93%E9%AA%8C%E8%AE%BE%E8%AE%A1%EF%BC%9A%E8%AE%A9%E8%BE%93%E5%AE%B6%E5%86%8D%E6%9D%A5%E4%B8%80%E5%B1%80%E7%9A%84%E5%BD%92%E5%9B%A0%E5%B9%B2%E9%A2%84.html">
+<meta property="og:title" content="敌人组合设计：先看关系再看数值的战斗压力法则">
+<meta property="og:url" content="http://example.com/wiki/03-%E5%AD%A6%E4%B9%A0/%E6%B8%B8%E6%88%8F%E7%AD%96%E5%88%92/02-%E6%88%98%E6%96%97%E7%B3%BB%E7%BB%9F/%E6%95%8C%E4%BA%BA%E7%BB%84%E5%90%88%E8%AE%BE%E8%AE%A1-%E5%85%88%E7%9C%8B%E5%85%B3%E7%B3%BB%E5%86%8D%E7%9C%8B%E6%95%B0%E5%80%BC.html">
 <meta property="og:site_name" content="海鸥整点百香果">
 <meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/images/redefine-og.webp">
-<meta property="article:published_time" content="2026-06-18T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-09-10T09:47:50.202Z">
+<meta property="article:published_time" content="2026-06-26T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-10T09:47:50.208Z">
 <meta property="article:author" content="Bottle OO">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/images/redefine-og.webp">
@@ -109,7 +109,7 @@
     
     <title>
         
-            PVP体验设计：让输家心甘情愿再来一局 | Seagull OO
+            敌人组合设计：先看关系再看数值的战斗压力法则 | Seagull OO
         
     </title>
 
@@ -706,31 +706,167 @@
 
 	<div class="page-template-content markdown-body">
 		
-		<h1>PVP体验设计：让输家心甘情愿再来一局</h1>
+		<h1>敌人组合设计：先看关系再看数值的战斗压力法则</h1>
 		
 
 		<blockquote>
-<p>来源：游戏策划方法论（论哥）<br>系统分类：战斗系统 &#x2F; PVP竞技<br>原 #38<br>标签：#战斗系统 #PVP #玩家心理 #归因干预</p>
+<p>来源：<a class="link"   target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/MFMcJyOTTknS7WHZAdUD0g" >欧米De游戏开发小屋<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a><br>作者：欧米<br>日期：2026-06-23<br>标签：#战斗设计 #敌人设计 #组合设计 #游戏设计</p>
 </blockquote>
 <hr>
-<h2 id="核心命题"><a href="#核心命题" class="headerlink" title="核心命题"></a>核心命题</h2><p>PVP每局至少一半人输。赢的人自己就爽了，<strong>真正要关心的是那一半输掉的人。</strong></p>
+<h2 id="核心观点"><a href="#核心观点" class="headerlink" title="核心观点"></a>核心观点</h2><p><strong>单个敌人的血量伤害容易调，但真正决定战斗体验的是敌人之间的关系。</strong> 好的组合不是把高压敌人堆在一起，而是让每个敌人有不同职责（主威胁&#x2F;远程干扰&#x2F;近身逼迫&#x2F;资源提供），形成玩家能读懂的压力层次。设计敌人组合不是为了更虐，而是为了让玩家不断做出有意义的优先级判断。</p>
 <hr>
-<h2 id="归因逻辑"><a href="#归因逻辑" class="headerlink" title="归因逻辑"></a>归因逻辑</h2><p>输了后大脑在归因，归因结果决定行为：</p>
-<ul>
-<li>“我太菜了” → 再来也是输 → <strong>习得性无助→流失</strong></li>
-<li>“龙被偷了，不然稳赢” → 遗憾不甘 → <strong>再来一局</strong></li>
+<h2 id="为什么组合比单个敌人更重要"><a href="#为什么组合比单个敌人更重要" class="headerlink" title="为什么组合比单个敌人更重要"></a>为什么组合比单个敌人更重要</h2><ul>
+<li>单个敌人好分析：血量、伤害、前后摇、范围、移速、霸体，都是可调参数，玩家打几次就能摸清</li>
+<li>但玩家进入关卡时，面对的是<strong>敌群 + 地形 + 距离 + 资源 + 任务目标</strong>的复合体</li>
+<li>战斗压力来源：伤害、站位、视野、控制、资源消耗、时间限制——单个敌人只给一种，组合把几种压力叠在一起</li>
+<li>组合的关键问题：<strong>玩家要不断判断”先打谁”</strong></li>
 </ul>
-<p>改善输家体验的本质：<strong>干预归因，让他把失败归到自己之外。</strong></p>
 <hr>
-<h2 id="三层干预机制"><a href="#三层干预机制" class="headerlink" title="三层干预机制"></a>三层干预机制</h2><h3 id="第一层：肯定他"><a href="#第一层：肯定他" class="headerlink" title="第一层：肯定他"></a>第一层：肯定他</h3><p>守望&#x2F;王者：输赢都给金牌&#x2F;评分。结算只告诉你哪里好，从不告诉你哪里差。<br><strong>给了”局部胜利”的叙事</strong>——整体输，但某维度成功。</p>
-<h3 id="第二层：模糊它"><a href="#第二层：模糊它" class="headerlink" title="第二层：模糊它"></a>第二层：模糊它</h3><p>MOBA抢龙：大龙归属看最后刀，不看伤害总量。<br>从公平性看荒谬，从体验看天才——输的人想的是”龙被偷了”，不是”我们太菜了”。</p>
-<h3 id="第三层：重释胜利"><a href="#第三层：重释胜利" class="headerlink" title="第三层：重释胜利"></a>第三层：重释胜利</h3><p>自走棋前四都算赢，吃鸡落地杀四人→”我太猛了”。<br><strong>足够多评判维度→几乎每人能找到”这局我还行”的维度。</strong></p>
+<h2 id="经典案例分析"><a href="#经典案例分析" class="headerlink" title="经典案例分析"></a>经典案例分析</h2><h3 id="《DOOM-Eternal》：小怪是资源点"><a href="#《DOOM-Eternal》：小怪是资源点" class="headerlink" title="《DOOM Eternal》：小怪是资源点"></a>《DOOM Eternal》：小怪是资源点</h3><table>
+<thead>
+<tr>
+<th>敌人角色</th>
+<th>机制</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>小僵尸&#x2F;士兵</td>
+<td>Glory Kill 补血 &#x2F; Chainsaw 补弹药 &#x2F; Flame Belch 补甲</td>
+</tr>
+<tr>
+<td>Arachnotron</td>
+<td>炮台远程持续压制</td>
+</tr>
+<tr>
+<td>Mancubus</td>
+<td>大范围火力限制走位</td>
+</tr>
+<tr>
+<td>Whiplash</td>
+<td>快速贴地切入，从视野边缘进场</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>核心</strong>：小怪单独看威胁为零，但在战斗中它们是<strong>资源补给站</strong>——玩家不能只盯着精英打，要留着几个小怪在关键时刻用。</p>
+</blockquote>
+<hr>
+<h3 id="《生化危机4-重制版》村庄战：远近搭配改变空间"><a href="#《生化危机4-重制版》村庄战：远近搭配改变空间" class="headerlink" title="《生化危机4 重制版》村庄战：远近搭配改变空间"></a>《生化危机4 重制版》村庄战：远近搭配改变空间</h3><ul>
+<li>近战村民逼玩家移动（不能站桩），远程投掷惩罚站位</li>
+<li>链锯男不是跑得快，而是”被追上就危险”——逼迫玩家提前让位</li>
+<li><strong>房屋&#x2F;窗户&#x2F;楼梯&#x2F;屋顶成了战斗的一部分</strong>，空间被敌人挤紧</li>
+<li>敌人没有变聪明，是组合让空间变小了</li>
+</ul>
+<hr>
+<h3 id="《Left-4-Dead-2》：组合破坏队形"><a href="#《Left-4-Dead-2》：组合破坏队形" class="headerlink" title="《Left 4 Dead 2》：组合破坏队形"></a>《Left 4 Dead 2》：组合破坏队形</h3><table>
+<thead>
+<tr>
+<th>感染者</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Boomer</td>
+<td>遮挡视野 + 引来尸潮</td>
+</tr>
+<tr>
+<td>Smoker</td>
+<td>拖走一个玩家，破坏阵型</td>
+</tr>
+<tr>
+<td>Hunter</td>
+<td>扑倒落单目标</td>
+</tr>
+<tr>
+<td>Charger</td>
+<td>撞散队伍</td>
+</tr>
+<tr>
+<td>普通尸潮</td>
+<td>数量压力，堵塞救援路线</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>核心</strong>：很多死亡不是因为某个感染者数值太高，而是<strong>队形被拆开→视野被遮→救援路线被堵→局面一步步失控</strong>。</p>
+</blockquote>
+<hr>
+<h3 id="《XCOM-2》：回合制也有组合压力"><a href="#《XCOM-2》：回合制也有组合压力" class="headerlink" title="《XCOM 2》：回合制也有组合压力"></a>《XCOM 2》：回合制也有组合压力</h3><ul>
+<li>普通士兵 → 基础射击压力</li>
+<li>军官 → 标记目标，让后续伤害变高</li>
+<li>Stun Lancer → 高速近身，惩罚拖延</li>
+<li>Sectoid → 心灵控制&#x2F;复活尸体</li>
+<li>回合制把压力从”反应速度”转移到**”行动顺序”和”风险管理”**上</li>
+</ul>
+<hr>
+<h3 id="《光环》Covenant：经典分工模版"><a href="#《光环》Covenant：经典分工模版" class="headerlink" title="《光环》Covenant：经典分工模版"></a>《光环》Covenant：经典分工模版</h3><table>
+<thead>
+<tr>
+<th>敌人</th>
+<th>角色</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Grunt</td>
+<td>数量压力、场面噪音</td>
+</tr>
+<tr>
+<td>Jackal（持盾）</td>
+<td>挡正面射击，逼玩家侧向移动</td>
+</tr>
+<tr>
+<td>Elite</td>
+<td>核心威胁，护盾强、灵活</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>核心</strong>：玩家能读懂——先清 Grunt 降噪音 → 绕开盾兵 → 集中火力破 Elite。不是一团混沌，而是有层次。</p>
+</blockquote>
+<hr>
+<h2 id="反面案例：神皮双人组"><a href="#反面案例：神皮双人组" class="headerlink" title="反面案例：神皮双人组"></a>反面案例：神皮双人组</h2><ul>
+<li>单个敌人都有清晰节奏，但同时在场后<strong>安全窗口被压得很窄</strong></li>
+<li>问题不在难度，而在<strong>玩家很难判断自己哪里做错了</strong></li>
+<li>多个敌人同时做同一种高压行为（都突进&#x2F;都远程压制&#x2F;都控制）→ 战斗变成噪音</li>
+</ul>
+<hr>
+<h2 id="组合设计原则"><a href="#组合设计原则" class="headerlink" title="组合设计原则"></a>组合设计原则</h2><h3 id="开工前的检查清单"><a href="#开工前的检查清单" class="headerlink" title="开工前的检查清单"></a>开工前的检查清单</h3><table>
+<thead>
+<tr>
+<th>问题</th>
+<th>目的</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>谁是主要威胁？</td>
+<td>给玩家一个明确的优先目标</td>
+</tr>
+<tr>
+<td>谁会迫使玩家移动？</td>
+<td>制造空间压力</td>
+</tr>
+<tr>
+<td>谁会限制玩家移动？</td>
+<td>制造距离&#x2F;方向约束</td>
+</tr>
+<tr>
+<td>谁会打断玩家常用打法？</td>
+<td>打破惯性</td>
+</tr>
+<tr>
+<td>谁可以被快速清掉？</td>
+<td>给玩家缓冲突破口</td>
+</tr>
+</tbody></table>
+<h3 id="两个公式"><a href="#两个公式" class="headerlink" title="两个公式"></a>两个公式</h3><ol>
+<li><strong>主压力 + 次压力</strong>：远程压制 + 近战逼近；高血盾兵 + 需优先处理的后排；快速突进 + 低威胁杂兵</li>
+<li><strong>不要全员高压</strong>：如果所有单位都”很重要”，玩家找不到突破口；如果只有血量差异，组合会单调</li>
+</ol>
+<h3 id="和地形一起看"><a href="#和地形一起看" class="headerlink" title="和地形一起看"></a>和地形一起看</h3><p>同样是 2 远程 + 3 近战，放在<strong>走廊 &#x2F; 广场 &#x2F; 二层平台 &#x2F; 转角房间</strong>——体验完全不同。<strong>很多时候变难不是敌人变强，是空间变小了。</strong></p>
 <hr>
 <h2 id="可迁移思路"><a href="#可迁移思路" class="headerlink" title="可迁移思路"></a>可迁移思路</h2><ol>
-<li>结算界面只晒亮点不揭短</li>
-<li>设计”被偷龙”型归因出口</li>
-<li>多维度评判标准</li>
-<li>用”输家再来率”而非”胜率”作为 PVP 生命线</li>
+<li><strong>先排关系，再调数值</strong>：明确敌人之间的职责分工后，再去调血量伤害出现时机——反过来做容易做成一团混乱</li>
+<li><strong>给每个敌人一个会”改变玩家决策”的机制</strong>，而不是仅仅数值不同</li>
+<li><strong>小怪可以是资源&#x2F;节奏点</strong>：DOOM Eternal 的 Glory Kill 思路——让低威胁敌人承载资源补给功能，迫使玩家主动保留它们</li>
+<li><strong>组合要有空隙</strong>：不是安全区域，而是清晰的攻击窗口、可先杀的突破口、可绕开的障碍——只要玩家还能找到处理顺序，就不会烦躁</li>
+<li><strong>测试不要在空白场地测</strong>：带地形、资源点、任务目标一起测，压力是否清楚、玩家是否能读懂局面</li>
 </ol>
 
 	</div>

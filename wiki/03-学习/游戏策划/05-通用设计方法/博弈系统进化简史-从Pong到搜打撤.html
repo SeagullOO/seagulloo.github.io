@@ -78,7 +78,7 @@
     
     <!--- Seo Part-->
     
-    <link rel="canonical" href="http://example.com/wiki/03-学习/游戏策划/02-战斗系统/pvp体验设计：让输家再来一局的归因干预.html"/>
+    <link rel="canonical" href="http://example.com/wiki/03-学习/游戏策划/05-通用设计方法/博弈系统进化简史-从pong到搜打撤.html"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
@@ -87,14 +87,14 @@
         
         <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="PVP体验设计：让输家心甘情愿再来一局">
-<meta property="og:url" content="http://example.com/wiki/03-%E5%AD%A6%E4%B9%A0/%E6%B8%B8%E6%88%8F%E7%AD%96%E5%88%92/02-%E6%88%98%E6%96%97%E7%B3%BB%E7%BB%9F/PVP%E4%BD%93%E9%AA%8C%E8%AE%BE%E8%AE%A1%EF%BC%9A%E8%AE%A9%E8%BE%93%E5%AE%B6%E5%86%8D%E6%9D%A5%E4%B8%80%E5%B1%80%E7%9A%84%E5%BD%92%E5%9B%A0%E5%B9%B2%E9%A2%84.html">
+<meta property="og:title" content="博弈系统进化简史：从Pong到搜打撤的博弈论应用之路">
+<meta property="og:url" content="http://example.com/wiki/03-%E5%AD%A6%E4%B9%A0/%E6%B8%B8%E6%88%8F%E7%AD%96%E5%88%92/05-%E9%80%9A%E7%94%A8%E8%AE%BE%E8%AE%A1%E6%96%B9%E6%B3%95/%E5%8D%9A%E5%BC%88%E7%B3%BB%E7%BB%9F%E8%BF%9B%E5%8C%96%E7%AE%80%E5%8F%B2-%E4%BB%8EPong%E5%88%B0%E6%90%9C%E6%89%93%E6%92%A4.html">
 <meta property="og:site_name" content="海鸥整点百香果">
 <meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/images/redefine-og.webp">
-<meta property="article:published_time" content="2026-06-18T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-09-10T09:47:50.202Z">
+<meta property="article:published_time" content="2026-07-07T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-10T09:47:50.224Z">
 <meta property="article:author" content="Bottle OO">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/images/redefine-og.webp">
@@ -109,7 +109,7 @@
     
     <title>
         
-            PVP体验设计：让输家心甘情愿再来一局 | Seagull OO
+            博弈系统进化简史：从Pong到搜打撤的博弈论应用之路 | Seagull OO
         
     </title>
 
@@ -706,31 +706,146 @@
 
 	<div class="page-template-content markdown-body">
 		
-		<h1>PVP体验设计：让输家心甘情愿再来一局</h1>
+		<h1>博弈系统进化简史：从Pong到搜打撤的博弈论应用之路</h1>
 		
 
 		<blockquote>
-<p>来源：游戏策划方法论（论哥）<br>系统分类：战斗系统 &#x2F; PVP竞技<br>原 #38<br>标签：#战斗系统 #PVP #玩家心理 #归因干预</p>
+<p>来源：<a class="link"   target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/AVFBWJT1AgPn2okVBx18KQ" >GAMEOFFER<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a><br>作者：GAMEOFFER<br>日期：2026-07-08<br>标签：#博弈论 #游戏设计理论 #零和博弈 #纳什均衡 #多维博弈</p>
 </blockquote>
 <hr>
-<h2 id="核心命题"><a href="#核心命题" class="headerlink" title="核心命题"></a>核心命题</h2><p>PVP每局至少一半人输。赢的人自己就爽了，<strong>真正要关心的是那一半输掉的人。</strong></p>
+<h2 id="核心观点"><a href="#核心观点" class="headerlink" title="核心观点"></a>核心观点</h2><p>格斗、射击、RPG、跑图解谜——所有游戏带给玩家的乐趣，都源自同一个底层系统：<strong>博弈。</strong> 从 1972 年《Pong》的对称零和博弈，到《街霸2》引入混合策略纳什均衡，到现代 RPG 的非零和博弈（状态损耗 → 决策取舍），再到搜打撤的多维博弈融合——博弈系统的复杂度随商业模式的演进（街机按次收费 → 买断制 → 持续运营）而不断升级。设计博弈系统的关键是：<strong>选对主博弈类型匹配你的游戏类型，然后确保「高风险 &#x3D; 高回报」——否则玩家会自己找到最轻松的解法（如全员蹲坑），毁掉整个博弈生态。</strong></p>
 <hr>
-<h2 id="归因逻辑"><a href="#归因逻辑" class="headerlink" title="归因逻辑"></a>归因逻辑</h2><p>输了后大脑在归因，归因结果决定行为：</p>
-<ul>
-<li>“我太菜了” → 再来也是输 → <strong>习得性无助→流失</strong></li>
-<li>“龙被偷了，不然稳赢” → 遗憾不甘 → <strong>再来一局</strong></li>
+<h2 id="第一阶段：零和博弈——电子游戏的起点"><a href="#第一阶段：零和博弈——电子游戏的起点" class="headerlink" title="第一阶段：零和博弈——电子游戏的起点"></a>第一阶段：零和博弈——电子游戏的起点</h2><h3 id="《Pong》（1972）：对称零和博弈"><a href="#《Pong》（1972）：对称零和博弈" class="headerlink" title="《Pong》（1972）：对称零和博弈"></a>《Pong》（1972）：对称零和博弈</h3><ul>
+<li>两个玩家拥有完全对等的条件和信息</li>
+<li>博弈核心：比「谁的操作更快」</li>
+<li>确立了电子游戏博弈的最底层形式</li>
 </ul>
-<p>改善输家体验的本质：<strong>干预归因，让他把失败归到自己之外。</strong></p>
+<h3 id="从双人到单人：不完全信息博弈的诞生"><a href="#从双人到单人：不完全信息博弈的诞生" class="headerlink" title="从双人到单人：不完全信息博弈的诞生"></a>从双人到单人：不完全信息博弈的诞生</h3><p>街机单人模式（1973）：电脑预封装 AI 行动路径来模拟对手。从此：</p>
+<ul>
+<li>PvE 游戏：玩家一开始不知道敌人分布、地图设计、资源分布</li>
+<li>电脑敌人时刻掌握玩家位置</li>
+<li>玩家在反复死亡中获得经验 → 将不完全信息转化为完全信息</li>
+<li>完成这个过程 → 大脑 VTA 分泌多巴胺 → <strong>「我比预期做得更好」的满足感</strong></li>
+</ul>
+<blockquote>
+<p>案例：《魂斗罗》——玩家像《明日边缘》一样在反复死亡中学习，逆转信息不对等，利用规则获胜。</p>
+</blockquote>
 <hr>
-<h2 id="三层干预机制"><a href="#三层干预机制" class="headerlink" title="三层干预机制"></a>三层干预机制</h2><h3 id="第一层：肯定他"><a href="#第一层：肯定他" class="headerlink" title="第一层：肯定他"></a>第一层：肯定他</h3><p>守望&#x2F;王者：输赢都给金牌&#x2F;评分。结算只告诉你哪里好，从不告诉你哪里差。<br><strong>给了”局部胜利”的叙事</strong>——整体输，但某维度成功。</p>
-<h3 id="第二层：模糊它"><a href="#第二层：模糊它" class="headerlink" title="第二层：模糊它"></a>第二层：模糊它</h3><p>MOBA抢龙：大龙归属看最后刀，不看伤害总量。<br>从公平性看荒谬，从体验看天才——输的人想的是”龙被偷了”，不是”我们太菜了”。</p>
-<h3 id="第三层：重释胜利"><a href="#第三层：重释胜利" class="headerlink" title="第三层：重释胜利"></a>第三层：重释胜利</h3><p>自走棋前四都算赢，吃鸡落地杀四人→”我太猛了”。<br><strong>足够多评判维度→几乎每人能找到”这局我还行”的维度。</strong></p>
+<h2 id="第二阶段：纳什均衡——从「比手速」到「比心理」"><a href="#第二阶段：纳什均衡——从「比手速」到「比心理」" class="headerlink" title="第二阶段：纳什均衡——从「比手速」到「比心理」"></a>第二阶段：纳什均衡——从「比手速」到「比心理」</h2><h3 id="《街头霸王2》（1991）：投技的引入"><a href="#《街头霸王2》（1991）：投技的引入" class="headerlink" title="《街头霸王2》（1991）：投技的引入"></a>《街头霸王2》（1991）：投技的引入</h3><p>投技让格斗从「谁出拳更快」变成<strong>剪刀石头布</strong>：</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">攻击 &gt; 投技 &gt; 防御（格挡）&gt; 攻击</span><br></pre></td></tr></table></figure></div>
+
+<p>在这个矩阵中不存在「必胜策略」。玩家必须在战斗中不断变换起手模式，防止被对手抓住习惯反制——这就是<strong>混合策略纳什均衡</strong>。</p>
+<blockquote>
+<p>它通过「零和博弈 + 纳什均衡」的混合模式，将 PvP 博弈从「比手速」「比操作」提升到「比心理素质」的层面。让双方不断寻找对方策略的「非随机性」并加以利用，通过「以小博大」的心理快感鼓励玩家探索新打法。</p>
+</blockquote>
+<hr>
+<h2 id="第三阶段：非零和博弈——状态损耗与决策取舍"><a href="#第三阶段：非零和博弈——状态损耗与决策取舍" class="headerlink" title="第三阶段：非零和博弈——状态损耗与决策取舍"></a>第三阶段：非零和博弈——状态损耗与决策取舍</h2><h3 id="什么是非零和博弈"><a href="#什么是非零和博弈" class="headerlink" title="什么是非零和博弈"></a>什么是非零和博弈</h3><p>代指所有「双方收益总和不为 0」的博弈——可以双赢，也可以双输。</p>
+<h3 id="PvE-中的非零和博弈"><a href="#PvE-中的非零和博弈" class="headerlink" title="PvE 中的非零和博弈"></a>PvE 中的非零和博弈</h3><p>现代 RPG 的常见设计：战斗受伤 → 生命值不会在胜利后自动恢复 → 玩家要么顶着不全状态继续战斗，要么付出代价回复。这代价可以是：</p>
+<ul>
+<li>购买的道具</li>
+<li>消耗魔法值的技能</li>
+<li>更危险的路线</li>
+<li>强制跑图回血点（如《崩坏：星穹铁道》靠传送点回血 &#x3D; 以多跑几步图为代价换取完全状态）</li>
+</ul>
+<h3 id="PvP-中的非零和博弈"><a href="#PvP-中的非零和博弈" class="headerlink" title="PvP 中的非零和博弈"></a>PvP 中的非零和博弈</h3><p>《CS:GO》对枪场景——在信息对等情况下，六种可能结果呈高尔顿钉板模型（中间高、两边低的钟形曲线）：</p>
+<ol>
+<li>A 颗秒 B</li>
+<li>双方换血，都没死</li>
+<li>A 击杀 B 但被击中（损失血量）</li>
+<li>B 击杀 A 但被击中</li>
+<li>双方互换</li>
+<li>B 颗秒 A</li>
+</ol>
+<blockquote>
+<p>保证自身状态完整且拿到战果的概率非常小，大概率出现「双输」局面。<strong>这种设计迫使玩家在「冒险突进」和「保守推进」间做出取舍，根据经验评估决策的期望收益是否值得承担潜在风险。</strong></p>
+</blockquote>
+<h3 id="为什么非零和博弈在买断制时代爆发？"><a href="#为什么非零和博弈在买断制时代爆发？" class="headerlink" title="为什么非零和博弈在买断制时代爆发？"></a>为什么非零和博弈在买断制时代爆发？</h3><p>街机商业模式：「让玩家快速死 → 投更多币」→ 死亡是不愉快的惩罚。<br>个人电脑&#x2F;主机买断制：「让玩家觉得物有所值」→ 设计师可以创造更广阔的世界、更深度的系统和更复杂的互动。状态损耗机制在街机时代是无法想象的——每死一次亏一次钱。</p>
+<hr>
+<h2 id="第四阶段：多维博弈——搜打撤的博弈融合"><a href="#第四阶段：多维博弈——搜打撤的博弈融合" class="headerlink" title="第四阶段：多维博弈——搜打撤的博弈融合"></a>第四阶段：多维博弈——搜打撤的博弈融合</h2><h3 id="案例：《三角洲行动》"><a href="#案例：《三角洲行动》" class="headerlink" title="案例：《三角洲行动》"></a>案例：《三角洲行动》</h3><p>一局游戏中同时运行多种博弈类型：</p>
+<table>
+<thead>
+<tr>
+<th>层级</th>
+<th>博弈类型</th>
+<th>体现</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>遭遇战</strong></td>
+<td>不完全信息博弈</td>
+<td>多队互相不知道对方人数、配置、位置 → 必须靠技能道具收集信息</td>
+</tr>
+<tr>
+<td><strong>多队对峙</strong></td>
+<td>非零和博弈（负和）</td>
+<td>任何造成自身损失的战斗都是双输——战损过大 → 被第三方收掉</td>
+</tr>
+<tr>
+<td><strong>时间限制</strong></td>
+<td>迫使破局</td>
+<td>三方之一必须主动出击——否则所有人耗到时间结束</td>
+</tr>
+<tr>
+<td><strong>整局结果</strong></td>
+<td>零和博弈</td>
+<td>赢家通吃，输家失去一切</td>
+</tr>
+<tr>
+<td><strong>局间决策</strong></td>
+<td>重复博弈（沉没成本）</td>
+<td>选哪个地图、用什么打法、起什么装备</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>多维博弈相互融合，最终呈现出流水百万的现象级产品。</p>
+</blockquote>
+<hr>
+<h2 id="实用方法论：怎么给每种游戏选对博弈系统？"><a href="#实用方法论：怎么给每种游戏选对博弈系统？" class="headerlink" title="实用方法论：怎么给每种游戏选对博弈系统？"></a>实用方法论：怎么给每种游戏选对博弈系统？</h2><h3 id="反向推导法：看外挂用什么挂"><a href="#反向推导法：看外挂用什么挂" class="headerlink" title="反向推导法：看外挂用什么挂"></a>反向推导法：看外挂用什么挂</h3><p>外挂的本质是让玩家跳过博弈过程直接获得结果。反推：外挂泛滥在哪个环节 → 那个环节的博弈是游戏的核心博弈类型。</p>
+<ul>
+<li>FPS 枪战外挂（自瞄&#x2F;透视）→ 核心博弈是<strong>信息+反应速度</strong></li>
+<li>MMO 脚本挂（自动打金&#x2F;练级）→ 核心博弈是<strong>资源获取效率</strong></li>
+<li>策略游戏外挂（全图视野）→ 核心博弈是<strong>不完全信息下的决策</strong></li>
+</ul>
+<h3 id="「高风险-高回报」是铁律"><a href="#「高风险-高回报」是铁律" class="headerlink" title="「高风险 &#x3D; 高回报」是铁律"></a>「高风险 &#x3D; 高回报」是铁律</h3><p>博弈的乐趣在于「以小博大」——高风险决策必须对应高回报，低风险决策必须对应低回报。</p>
+<p>违反这个规则的后果：<strong>「老六」「龟仙人」「蹲比」现象。</strong></p>
+<blockquote>
+<p>人天然倾向更轻松、更方便、收益又高的方法。如果蹲在别人必经之路上等一梭子比主动推进的收益还高——那所有人都会蹲，游戏变成十二把狙往草丛一趴，半小时对局前二十五分钟听不见枪声。<strong>这不是玩家的问题，是博弈设计的问题。</strong></p>
+</blockquote>
+<hr>
+<h2 id="博弈系统的进化驱动力：商业模式"><a href="#博弈系统的进化驱动力：商业模式" class="headerlink" title="博弈系统的进化驱动力：商业模式"></a>博弈系统的进化驱动力：商业模式</h2><table>
+<thead>
+<tr>
+<th>时代</th>
+<th>商业模式</th>
+<th>博弈设计</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>街机时代</td>
+<td>按次收费（投币）</td>
+<td>快速消耗生命数 → 诱导投币 → 零和博弈为主</td>
+</tr>
+<tr>
+<td>买断制时代</td>
+<td>一次性付费</td>
+<td>让玩家觉得物有所值 → 非零和博弈、开放世界、深层系统</td>
+</tr>
+<tr>
+<td>持续运营时代</td>
+<td>免费+内购&#x2F;通行证</td>
+<td>多维博弈融合 → 既要零和的刺激感（吸引竞技玩家），又要非零和的容错空间（留住休闲玩家）</td>
+</tr>
+</tbody></table>
 <hr>
 <h2 id="可迁移思路"><a href="#可迁移思路" class="headerlink" title="可迁移思路"></a>可迁移思路</h2><ol>
-<li>结算界面只晒亮点不揭短</li>
-<li>设计”被偷龙”型归因出口</li>
-<li>多维度评判标准</li>
-<li>用”输家再来率”而非”胜率”作为 PVP 生命线</li>
+<li><p><strong>别迷信「博弈越复杂越好」。</strong> 多维博弈适合搜打撤这种本身就多层的游戏类型，但给一个休闲消除游戏叠上不完全信息+非零和+重复博弈就是灾难。<strong>博弈复杂度要匹配产品定位。</strong></p>
+</li>
+<li><p><strong>排查你的游戏里有没有「最优无聊策略」。</strong> 如果玩家发现蹲坑&#x2F;挂机&#x2F;重复低操作行为能获得与高风险高操作行为相同甚至更高的收益 → 那是博弈设计缺陷。立刻调整风险-回报曲线。</p>
+</li>
+<li><p><strong>反推外挂可以验证博弈设计是否合理。</strong> 如果一个博弈环节被外挂大量跳过（如自动瞄准替代了手动瞄准博弈），说明这个博弈环节对多数玩家来说是负担而非乐趣。考虑：降低该环节的难度？提供辅助机制（如辅助瞄准）？还是直接用其他博弈替代？</p>
+</li>
+<li><p><strong>非零和博弈是留存的关键。</strong> 纯粹的零和博弈（赢家通吃、输家全输）让 50% 的玩家每局都以挫败结束。状态损耗、跑图代价、分段奖励——这些非零和设计让输家也能「带点什么走」，降低退出概率。</p>
+</li>
 </ol>
 
 	</div>

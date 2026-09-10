@@ -78,7 +78,7 @@
     
     <!--- Seo Part-->
     
-    <link rel="canonical" href="http://example.com/wiki/03-学习/游戏策划/02-战斗系统/pvp体验设计：让输家再来一局的归因干预.html"/>
+    <link rel="canonical" href="http://example.com/wiki/03-学习/游戏策划/05-通用设计方法/hybrid三层分离-获客留存赚钱拆开做.html"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
@@ -87,14 +87,14 @@
         
         <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="PVP体验设计：让输家心甘情愿再来一局">
-<meta property="og:url" content="http://example.com/wiki/03-%E5%AD%A6%E4%B9%A0/%E6%B8%B8%E6%88%8F%E7%AD%96%E5%88%92/02-%E6%88%98%E6%96%97%E7%B3%BB%E7%BB%9F/PVP%E4%BD%93%E9%AA%8C%E8%AE%BE%E8%AE%A1%EF%BC%9A%E8%AE%A9%E8%BE%93%E5%AE%B6%E5%86%8D%E6%9D%A5%E4%B8%80%E5%B1%80%E7%9A%84%E5%BD%92%E5%9B%A0%E5%B9%B2%E9%A2%84.html">
+<meta property="og:title" content="Hybrid三层分离：获客、留存、赚钱拆开做—Clash of Critters拆解">
+<meta property="og:url" content="http://example.com/wiki/03-%E5%AD%A6%E4%B9%A0/%E6%B8%B8%E6%88%8F%E7%AD%96%E5%88%92/05-%E9%80%9A%E7%94%A8%E8%AE%BE%E8%AE%A1%E6%96%B9%E6%B3%95/Hybrid%E4%B8%89%E5%B1%82%E5%88%86%E7%A6%BB-%E8%8E%B7%E5%AE%A2%E7%95%99%E5%AD%98%E8%B5%9A%E9%92%B1%E6%8B%86%E5%BC%80%E5%81%9A.html">
 <meta property="og:site_name" content="海鸥整点百香果">
 <meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/images/redefine-og.webp">
-<meta property="article:published_time" content="2026-06-18T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-09-10T09:47:50.202Z">
+<meta property="article:published_time" content="2026-07-02T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-10T09:47:50.219Z">
 <meta property="article:author" content="Bottle OO">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/images/redefine-og.webp">
@@ -109,7 +109,7 @@
     
     <title>
         
-            PVP体验设计：让输家心甘情愿再来一局 | Seagull OO
+            Hybrid三层分离：获客、留存、赚钱拆开做—Clash of Critters拆解 | Seagull OO
         
     </title>
 
@@ -706,31 +706,117 @@
 
 	<div class="page-template-content markdown-body">
 		
-		<h1>PVP体验设计：让输家心甘情愿再来一局</h1>
+		<h1>Hybrid三层分离：获客、留存、赚钱拆开做—Clash of Critters拆解</h1>
 		
 
 		<blockquote>
-<p>来源：游戏策划方法论（论哥）<br>系统分类：战斗系统 &#x2F; PVP竞技<br>原 #38<br>标签：#战斗系统 #PVP #玩家心理 #归因干预</p>
+<p>来源：<a class="link"   target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/rA-R6Ublaw4vF_bPjTyKzw" >DennisLook<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a><br>作者：一只懒猫<br>日期：2026-07-01<br>标签：#Hybrid #产品设计 #买量策略 #Clash-of-Critters #莉莉丝</p>
 </blockquote>
 <hr>
-<h2 id="核心命题"><a href="#核心命题" class="headerlink" title="核心命题"></a>核心命题</h2><p>PVP每局至少一半人输。赢的人自己就爽了，<strong>真正要关心的是那一半输掉的人。</strong></p>
+<h2 id="核心观点"><a href="#核心观点" class="headerlink" title="核心观点"></a>核心观点</h2><p>Hybrid 的本质不是玩法融合，而是把<strong>获客、留存、赚钱三层拆开</strong>。用休闲外观拉人（获客层），用养成和社交留住（留存层），用重度数值体系变现（赚钱层）。《Clash of Critters》首月全球流水破1亿、日流水360万的关键不是玩法创新，而是让玩家在无痛中从休闲走向重度——<strong>被筛而不自知，变重还能接受。</strong></p>
 <hr>
-<h2 id="归因逻辑"><a href="#归因逻辑" class="headerlink" title="归因逻辑"></a>归因逻辑</h2><p>输了后大脑在归因，归因结果决定行为：</p>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><table>
+<thead>
+<tr>
+<th>项目</th>
+<th>数据</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>产品</td>
+<td>Clash of Critters（莉莉丝）</td>
+</tr>
+<tr>
+<td>类型</td>
+<td>弹珠塔防 + 萌宠养成</td>
+</tr>
+<tr>
+<td>首月流水</td>
+<td>1亿元</td>
+</tr>
+<tr>
+<td>日流水</td>
+<td>~360万元</td>
+</tr>
+</tbody></table>
+<p>从《万国觉醒》《剑与远征》的重度策略，到一群圆滚滚小动物——莉莉丝看起来在品类下探，其实是在<strong>重新设计获客路径</strong>。</p>
+<hr>
+<h2 id="商业逻辑变迁"><a href="#商业逻辑变迁" class="headerlink" title="商业逻辑变迁"></a>商业逻辑变迁</h2><h3 id="旧模式（五六年前）"><a href="#旧模式（五六年前）" class="headerlink" title="旧模式（五六年前）"></a>旧模式（五六年前）</h3><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SLG素材 → SLG用户下载 → 玩SLG → 花$50买一个值$100的用户</span><br></pre></td></tr></table></figure></div>
+<p>三件事一致，简单直接。问题：<strong>SLG玩家越来越难找。</strong></p>
+<h3 id="新模式"><a href="#新模式" class="headerlink" title="新模式"></a>新模式</h3><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">休闲素材（人人看得懂）→ 大量用户下载 → 逐步筛选 → 少数人付费</span><br></pre></td></tr></table></figure></div>
+<p>花$1让100人进来，筛出那1个愿意花$100的。<strong>广告越来越轻，产品越来越重。以前是重度游戏买重度用户，现在是休闲游戏替重度游戏找用户。</strong></p>
+<hr>
+<h2 id="为什么长这样？——设计决策的反推"><a href="#为什么长这样？——设计决策的反推" class="headerlink" title="为什么长这样？——设计决策的反推"></a>为什么长这样？——设计决策的反推</h2><p>每个外观选择，都是买量倒逼的：</p>
+<table>
+<thead>
+<tr>
+<th>设计选择</th>
+<th>理由</th>
+<th>核心逻辑</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>萌宠</strong></td>
+<td>几乎没有文化门槛</td>
+<td>全球通用，谁看了都想点</td>
+</tr>
+<tr>
+<td><strong>弹珠</strong></td>
+<td>不用教学</td>
+<td>拉动弹弓 &#x3D; 直觉操作</td>
+</tr>
+<tr>
+<td><strong>多路塔防</strong></td>
+<td>全球用户被《植物大战僵尸》教育了十几年</td>
+<td>广告前2秒大脑自动理解</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>“广告真正竞争的，不是30秒，而是<strong>前3秒</strong>。前三秒没有建立认知，后面所有内容都没有意义。”</p>
+</blockquote>
+<p>所以莉莉丝把这个问题从<strong>素材优化提前到了产品立项阶段</strong>——不是想怎么剪广告，而是想让产品本身就变成最好的广告。</p>
+<hr>
+<h2 id="Hybrid三层分离：商场模型"><a href="#Hybrid三层分离：商场模型" class="headerlink" title="Hybrid三层分离：商场模型"></a>Hybrid三层分离：商场模型</h2><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">门口橱窗（获客层）        →  休闲外观、萌宠、弹珠</span><br><span class="line">  ↓</span><br><span class="line">中间楼层（留存层）        →  养成、社交、复仇系统</span><br><span class="line">  ↓</span><br><span class="line">最深处（赚钱层）          →  抽卡、属性克制、阵容搭配、长期养成</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>像一家大型商场：门口摆所有人都愿意逛的橱窗，真正赚钱的是里面让人停留最久的楼层。</p>
+</blockquote>
+<hr>
+<h2 id="「偷」了三个老游戏最值钱的东西"><a href="#「偷」了三个老游戏最值钱的东西" class="headerlink" title="「偷」了三个老游戏最值钱的东西"></a>「偷」了三个老游戏最值钱的东西</h2><h3 id="1-《植物大战僵尸》——认知效率"><a href="#1-《植物大战僵尸》——认知效率" class="headerlink" title="1. 《植物大战僵尸》——认知效率"></a>1. 《植物大战僵尸》——认知效率</h3><p>不是怀念老游戏，而是它完成了<strong>全球范围的用户教育</strong>。几乎不需要文字解释，玩家看一眼就知道怎么玩。</p>
+<h3 id="2-《Coin-Master》——反馈节奏"><a href="#2-《Coin-Master》——反馈节奏" class="headerlink" title="2. 《Coin Master》——反馈节奏"></a>2. 《Coin Master》——反馈节奏</h3><p>核心逻辑八字：<strong>极短反馈、纯粹随机、社交剥夺。</strong></p>
 <ul>
-<li>“我太菜了” → 再来也是输 → <strong>习得性无助→流失</strong></li>
-<li>“龙被偷了，不然稳赢” → 遗憾不甘 → <strong>再来一局</strong></li>
+<li>可变奖励（variable reward）：每次弹射的不确定性本身就是快乐</li>
+<li>资源争夺 + 复仇系统：不断制造”再来一次”的理由</li>
+<li>玩家留下来不是因为内容多，而是因为游戏不断给了一个<strong>下一次可能更有意思</strong>的期待</li>
 </ul>
-<p>改善输家体验的本质：<strong>干预归因，让他把失败归到自己之外。</strong></p>
+<h3 id="3-《宝可梦》——情感价值"><a href="#3-《宝可梦》——情感价值" class="headerlink" title="3. 《宝可梦》——情感价值"></a>3. 《宝可梦》——情感价值</h3><ul>
+<li>数值系统不会让人产生感情，<strong>角色</strong>才会</li>
+<li>萌宠做表情、犯蠢、受伤贴创可贴——对推图没帮助，但让抽卡从买强度变成买陪伴</li>
+<li>同样一张SSR，冷冰冰立绘 vs 每天朝你摇尾巴的小动物，付费心理完全不同</li>
+</ul>
 <hr>
-<h2 id="三层干预机制"><a href="#三层干预机制" class="headerlink" title="三层干预机制"></a>三层干预机制</h2><h3 id="第一层：肯定他"><a href="#第一层：肯定他" class="headerlink" title="第一层：肯定他"></a>第一层：肯定他</h3><p>守望&#x2F;王者：输赢都给金牌&#x2F;评分。结算只告诉你哪里好，从不告诉你哪里差。<br><strong>给了”局部胜利”的叙事</strong>——整体输，但某维度成功。</p>
-<h3 id="第二层：模糊它"><a href="#第二层：模糊它" class="headerlink" title="第二层：模糊它"></a>第二层：模糊它</h3><p>MOBA抢龙：大龙归属看最后刀，不看伤害总量。<br>从公平性看荒谬，从体验看天才——输的人想的是”龙被偷了”，不是”我们太菜了”。</p>
-<h3 id="第三层：重释胜利"><a href="#第三层：重释胜利" class="headerlink" title="第三层：重释胜利"></a>第三层：重释胜利</h3><p>自走棋前四都算赢，吃鸡落地杀四人→”我太猛了”。<br><strong>足够多评判维度→几乎每人能找到”这局我还行”的维度。</strong></p>
+<h2 id="最关键一招：筛人，但别让人发现"><a href="#最关键一招：筛人，但别让人发现" class="headerlink" title="最关键一招：筛人，但别让人发现"></a>最关键一招：筛人，但别让人发现</h2><p>前半段：把人拉进来（轻松休闲）<br>后半段：让人留下掏钱（属性克制、阵容搭配、长期养成）</p>
+<p><strong>多数产品只做到了分离，没做到自然。</strong> 玩家明显感觉到画风突变，像被从休闲厅硬拽进赌场 → 卸载。</p>
+<p>《Clash of Critters》的妙处：</p>
+<ul>
+<li>重度内容不是突然砸脸上的</li>
+<li>顺着「想让我的小动物变强」这个念头，一点一点渗透</li>
+<li>你投入的是<strong>陪伴感</strong>，不是数值焦虑</li>
+<li>即使发现游戏变重了，也不会觉得被耍</li>
+</ul>
+<blockquote>
+<p>“Hybrid最难做的从来不是把休闲和重度拼在一起，而是让玩家<strong>主动选择</strong>从休闲走向重度，还他妈觉得自己是<strong>自愿的</strong>。”</p>
+</blockquote>
 <hr>
 <h2 id="可迁移思路"><a href="#可迁移思路" class="headerlink" title="可迁移思路"></a>可迁移思路</h2><ol>
-<li>结算界面只晒亮点不揭短</li>
-<li>设计”被偷龙”型归因出口</li>
-<li>多维度评判标准</li>
-<li>用”输家再来率”而非”胜率”作为 PVP 生命线</li>
+<li><p><strong>立项时就考虑获客效率，不要丢给市场部。</strong> 玩法选择不只是好玩不好玩，还要问：这个玩法能在广告前3秒建立认知吗？全球用户被哪个老游戏教育过了？</p>
+</li>
+<li><p><strong>三层分离是设计原则，不是缝合怪。</strong> 每一层（获客&#x2F;留存&#x2F;赚钱）可以服务不同用户、用不同玩法——关键是过渡要自然，让玩家「自愿」升级。</p>
+</li>
+<li><p><strong>情感价值 &gt; 数值价值。</strong> 同是SSR，有表情有性格有互动的角色，付费转化远高于纯数值单位。给角色做「推图没用但建立情感连接的设计」不是浪费——那才是长期留存的核心。</p>
+</li>
+<li><p><strong>Coin Master的可变奖励节奏值得深入研究。</strong> 极短反馈 + 随机 + 社交剥夺 &#x3D; 持续投入。把每一局战斗的不确定性设计成「快乐的一部分」，而不只是概率系统。</p>
+</li>
 </ol>
 
 	</div>

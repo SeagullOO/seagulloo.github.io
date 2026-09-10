@@ -78,7 +78,7 @@
     
     <!--- Seo Part-->
     
-    <link rel="canonical" href="http://example.com/wiki/03-学习/游戏策划/02-战斗系统/pvp体验设计：让输家再来一局的归因干预.html"/>
+    <link rel="canonical" href="http://example.com/wiki/03-学习/游戏策划/02-战斗系统/战斗数值底层设计-加法乘法与攻击力体系.html"/>
     <meta name="robots" content="index,follow">
     <meta name="googlebot" content="index,follow">
     <meta name="revisit-after" content="1 days">
@@ -87,14 +87,14 @@
         
         <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="PVP体验设计：让输家心甘情愿再来一局">
-<meta property="og:url" content="http://example.com/wiki/03-%E5%AD%A6%E4%B9%A0/%E6%B8%B8%E6%88%8F%E7%AD%96%E5%88%92/02-%E6%88%98%E6%96%97%E7%B3%BB%E7%BB%9F/PVP%E4%BD%93%E9%AA%8C%E8%AE%BE%E8%AE%A1%EF%BC%9A%E8%AE%A9%E8%BE%93%E5%AE%B6%E5%86%8D%E6%9D%A5%E4%B8%80%E5%B1%80%E7%9A%84%E5%BD%92%E5%9B%A0%E5%B9%B2%E9%A2%84.html">
+<meta property="og:title" content="战斗数值底层设计：加法乘法的本质差异、独立乘区与攻击力体系">
+<meta property="og:url" content="http://example.com/wiki/03-%E5%AD%A6%E4%B9%A0/%E6%B8%B8%E6%88%8F%E7%AD%96%E5%88%92/02-%E6%88%98%E6%96%97%E7%B3%BB%E7%BB%9F/%E6%88%98%E6%96%97%E6%95%B0%E5%80%BC%E5%BA%95%E5%B1%82%E8%AE%BE%E8%AE%A1-%E5%8A%A0%E6%B3%95%E4%B9%98%E6%B3%95%E4%B8%8E%E6%94%BB%E5%87%BB%E5%8A%9B%E4%BD%93%E7%B3%BB.html">
 <meta property="og:site_name" content="海鸥整点百香果">
 <meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/images/redefine-og.webp">
-<meta property="article:published_time" content="2026-06-18T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-09-10T09:47:50.202Z">
+<meta property="article:published_time" content="2026-07-14T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-10T09:47:50.205Z">
 <meta property="article:author" content="Bottle OO">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/images/redefine-og.webp">
@@ -109,7 +109,7 @@
     
     <title>
         
-            PVP体验设计：让输家心甘情愿再来一局 | Seagull OO
+            战斗数值底层设计：加法乘法的本质差异、独立乘区与攻击力体系 | Seagull OO
         
     </title>
 
@@ -706,31 +706,374 @@
 
 	<div class="page-template-content markdown-body">
 		
-		<h1>PVP体验设计：让输家心甘情愿再来一局</h1>
+		<h1>战斗数值底层设计：加法乘法的本质差异、独立乘区与攻击力体系</h1>
 		
 
 		<blockquote>
-<p>来源：游戏策划方法论（论哥）<br>系统分类：战斗系统 &#x2F; PVP竞技<br>原 #38<br>标签：#战斗系统 #PVP #玩家心理 #归因干预</p>
+<p>来源：<a class="link"   target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/8VdS7dUJpp6c-LjdUlediQ" >植光的游文屋<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a>（一&#x2F;二&#x2F;三&#x2F;四）<br>作者：植光<br>日期：2026-06-26 ~ 2026-07-10<br>标签：#战斗数值 #伤害公式 #独立乘区 #攻击力 #增伤 #命中率</p>
 </blockquote>
 <hr>
-<h2 id="核心命题"><a href="#核心命题" class="headerlink" title="核心命题"></a>核心命题</h2><p>PVP每局至少一半人输。赢的人自己就爽了，<strong>真正要关心的是那一半输掉的人。</strong></p>
+<h2 id="核心观点"><a href="#核心观点" class="headerlink" title="核心观点"></a>核心观点</h2><p>战斗属性的叠加方式归根结底只有两种：加法和乘法。加法定位于高频投放的基础属性（稳定可控但后期稀释），乘法定位于低频投放的稀缺属性（互相放大但容易膨胀）。划分独立乘区的标准是机制独立、词条供给独立、数量均衡。攻击力作为伤害链路的输入端，决定所有后续乘区的基数——前期优先堆攻击力，是因为同等投入下攻击力对总伤害的拉动比例远高于暴击和增伤。</p>
 <hr>
-<h2 id="归因逻辑"><a href="#归因逻辑" class="headerlink" title="归因逻辑"></a>归因逻辑</h2><p>输了后大脑在归因，归因结果决定行为：</p>
+<h2 id="第一篇：加法与乘法的本质差异"><a href="#第一篇：加法与乘法的本质差异" class="headerlink" title="第一篇：加法与乘法的本质差异"></a>第一篇：加法与乘法的本质差异</h2><h3 id="数学定义"><a href="#数学定义" class="headerlink" title="数学定义"></a>数学定义</h3><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>公式</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>加法叠加</strong></td>
+<td><code>Final = Base × (1 + Σb_i)</code></td>
+<td>多个加成先求和，再作用于基础值</td>
+</tr>
+<tr>
+<td><strong>乘法叠加</strong></td>
+<td><code>Final = Base × Π(1 + b_i)</code></td>
+<td>多个加成各自独立作用于上一步结果</td>
+</tr>
+</tbody></table>
+<h3 id="10条词条叠加的巨大差异"><a href="#10条词条叠加的巨大差异" class="headerlink" title="10条词条叠加的巨大差异"></a>10条词条叠加的巨大差异</h3><p>假设基础值 1000，10 条 +20% 词条：</p>
 <ul>
-<li>“我太菜了” → 再来也是输 → <strong>习得性无助→流失</strong></li>
-<li>“龙被偷了，不然稳赢” → 遗憾不甘 → <strong>再来一局</strong></li>
+<li><strong>加法</strong>：<code>1000 × (1 + 200%) = 3000</code> → ×3</li>
+<li><strong>乘法</strong>：<code>1000 × 1.2¹⁰ ≈ 6200</code> → ×6.2</li>
 </ul>
-<p>改善输家体验的本质：<strong>干预归因，让他把失败归到自己之外。</strong></p>
+<h3 id="边际效益对比"><a href="#边际效益对比" class="headerlink" title="边际效益对比"></a>边际效益对比</h3><table>
+<thead>
+<tr>
+<th></th>
+<th>加法叠加</th>
+<th>乘法叠加</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>绝对提升</strong></td>
+<td>恒定（Base×20%&#x3D;200）</td>
+<td>递增（基数越来越大）</td>
+</tr>
+<tr>
+<td><strong>相对提升</strong></td>
+<td>递减（分母变大→稀释）</td>
+<td>恒定（始终×1.2）</td>
+</tr>
+<tr>
+<td><strong>现象</strong></td>
+<td><strong>稀释</strong></td>
+<td><strong>膨胀</strong></td>
+</tr>
+</tbody></table>
+<h3 id="怎么选？"><a href="#怎么选？" class="headerlink" title="怎么选？"></a>怎么选？</h3><h4 id="加法叠加：稳但后期没感觉"><a href="#加法叠加：稳但后期没感觉" class="headerlink" title="加法叠加：稳但后期没感觉"></a>加法叠加：稳但后期没感觉</h4><ul>
+<li>✅ 数值整体稳定、可控，线性外推预测后期总盘容易</li>
+<li>✅ 后期不膨胀，版本迭代调参风险小</li>
+<li>❌ 相对收益递减：同样+20%，前期从100%→120%体感明显，后期已有200%加成时从300%→320%感觉不到提升</li>
+<li><strong>适用</strong>：投放密度高、玩家易大量获取的基础属性（攻击力百分比、常规增伤、暴击率）</li>
+<li><strong>案例</strong>：《艾尔登法环》属性补正——力&#x2F;敏&#x2F;智&#x2F;信&#x2F;感以加算形式作用于武器基础攻击力，受软上限约束（40&#x2F;60级）→ 超过阈值后边际递减</li>
+</ul>
+<h4 id="乘法叠加：爽但容易失控"><a href="#乘法叠加：爽但容易失控" class="headerlink" title="乘法叠加：爽但容易失控"></a>乘法叠加：爽但容易失控</h4><ul>
+<li>✅ 稀缺词条不会被其他乘区稀释，反而能互相放大</li>
+<li>❌ 投放太多→后期数值膨胀极快，必须严格限制获取渠道和数量上限</li>
+<li><strong>适用</strong>：投放密度极低、玩家难以大量获取的稀缺属性（最终伤害加成、对BOSS伤害、特殊机制加成）</li>
+<li><strong>案例</strong>：《崩坏：星穹铁道》击破流——击破特攻是一个独立于直伤体系（攻击力&#x2F;暴击&#x2F;增伤）的独立乘区，击破特攻从0%堆到100% → 击破伤害直接翻倍。正因和直伤分得开，才能做出独立的击破流 build</li>
+</ul>
+<blockquote>
+<p>关键细节：行业内说的「乘法叠加」本质上是<strong>多独立乘区结构</strong>——同区加算、区间乘算。每个词条各自作为独立乘区时，互相之间按乘法生效。</p>
+</blockquote>
 <hr>
-<h2 id="三层干预机制"><a href="#三层干预机制" class="headerlink" title="三层干预机制"></a>三层干预机制</h2><h3 id="第一层：肯定他"><a href="#第一层：肯定他" class="headerlink" title="第一层：肯定他"></a>第一层：肯定他</h3><p>守望&#x2F;王者：输赢都给金牌&#x2F;评分。结算只告诉你哪里好，从不告诉你哪里差。<br><strong>给了”局部胜利”的叙事</strong>——整体输，但某维度成功。</p>
-<h3 id="第二层：模糊它"><a href="#第二层：模糊它" class="headerlink" title="第二层：模糊它"></a>第二层：模糊它</h3><p>MOBA抢龙：大龙归属看最后刀，不看伤害总量。<br>从公平性看荒谬，从体验看天才——输的人想的是”龙被偷了”，不是”我们太菜了”。</p>
-<h3 id="第三层：重释胜利"><a href="#第三层：重释胜利" class="headerlink" title="第三层：重释胜利"></a>第三层：重释胜利</h3><p>自走棋前四都算赢，吃鸡落地杀四人→”我太猛了”。<br><strong>足够多评判维度→几乎每人能找到”这局我还行”的维度。</strong></p>
+<h2 id="第二篇：独立乘区与伤害公式通用框架"><a href="#第二篇：独立乘区与伤害公式通用框架" class="headerlink" title="第二篇：独立乘区与伤害公式通用框架"></a>第二篇：独立乘区与伤害公式通用框架</h2><h3 id="什么是独立乘区"><a href="#什么是独立乘区" class="headerlink" title="什么是独立乘区"></a>什么是独立乘区</h3><p>核心原则：<strong>同区加算，异区乘算。</strong> 把同类型的加成项打包成一个区间，区间内部用加法，区间之间用乘法。</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">ATK区（属性计算区，输出绝对值，如3120）</span><br><span class="line">    ↓</span><br><span class="line">增伤区（所有增伤词条加算 → 1+ΣDMG_BONUS）</span><br><span class="line">    ↓</span><br><span class="line">暴击区（暴击时乘暴击倍率，非暴击时1.0）</span><br><span class="line">    ↓</span><br><span class="line">防御区（根据DEF算减伤）</span><br><span class="line">    ↓</span><br><span class="line">抗性区（根据抗性算减伤）</span><br><span class="line">    ↓</span><br><span class="line">最终伤害区（少数特殊词条独立乘算）</span><br></pre></td></tr></table></figure></div>
+
+<blockquote>
+<p>ATK区输出的是绝对值（带单位），后续每个乘区输出的是无量纲的比例系数。<strong>前者是造数，后者是缩放。</strong></p>
+</blockquote>
+<h3 id="怎么划乘区：三个标准"><a href="#怎么划乘区：三个标准" class="headerlink" title="怎么划乘区：三个标准"></a>怎么划乘区：三个标准</h3><h4 id="1-机制独立"><a href="#1-机制独立" class="headerlink" title="1. 机制独立"></a>1. 机制独立</h4><p>不同乘区对应不同的伤害形成机制：基础攻击决定伤害基数、防御&#x2F;抗性是目标端减伤修正、暴击是概率性爆发放大。只有机制独立的项才适合拆分为独立乘区。</p>
+<h4 id="2-词条供给独立"><a href="#2-词条供给独立" class="headerlink" title="2. 词条供给独立"></a>2. 词条供给独立</h4><p>每个乘区的词条来源应足够分散：攻击主要来自武器与基础成长、增伤来自技能与装备专属部位、暴击来自饰品副词条、最终伤害来自稀有buff——<strong>各管各的。</strong></p>
+<blockquote>
+<p>可以允许小幅度交叉（同一件装备同时给ATK%和暴击率没问题），但如果一把武器同时加50%ATK+50%增伤+50%暴击 → 配装意义被抹杀，养成路径高度单一。</p>
+</blockquote>
+<h4 id="3-数量均衡"><a href="#3-数量均衡" class="headerlink" title="3. 数量均衡"></a>3. 数量均衡</h4><ul>
+<li><strong>乘区过多</strong> → 乘法叠加导致数值膨胀，平衡难度陡增；玩家理解成本高</li>
+<li><strong>乘区过少</strong> → 所有加成集中加算，边际递减严重，没有「水桶效应」，策略性不足</li>
+</ul>
+<p>所谓水桶效应：总伤害上限由数值最低的乘区决定。单一乘区堆再高、其他乘区过低 → 严重拖累总伤害；只有均衡提升所有乘区，总伤害才最大化。乘区太少，玩家就没得选了。</p>
+<blockquote>
+<p>具体数量根据项目定位灵活确定。放置类&#x2F;休闲类可极简（如《无尽冬日》远征下仅攻&#x2F;防&#x2F;杀伤&#x2F;生命四个属性），重度ARPG可做更丰富体系。</p>
+</blockquote>
+<h3 id="伤害公式通用框架"><a href="#伤害公式通用框架" class="headerlink" title="伤害公式通用框架"></a>伤害公式通用框架</h3><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">造数段（输出伤害基数）：</span><br><span class="line">  Skill_Base_DMG = Base_Damage × Skill_Multiplier（技能倍率）</span><br><span class="line"></span><br><span class="line">缩放段（逐级乘以乘区系数）：</span><br><span class="line">  × Damage_Bonus_Zone      （增伤区：所有增伤词条加算后乘入）</span><br><span class="line">  × Crit_Zone               （暴击区：暴击时为倍率，非暴击时为1.0）</span><br><span class="line">  × Defense_Zone            （防御区：根据目标DEF计算减伤）</span><br><span class="line">  × Resistance_Zone         （抗性区：根据目标抗性计算减伤）</span><br><span class="line">  × Final_Damage_Zone       （最终伤害区：少数特殊词条独立乘算）</span><br></pre></td></tr></table></figure></div>
+
+<h4 id="链路顺序：先攻后守"><a href="#链路顺序：先攻后守" class="headerlink" title="链路顺序：先攻后守"></a>链路顺序：先攻后守</h4><p>暴击区放在增伤区之后、防御区之前——遵循先攻后守逻辑：</p>
+<ul>
+<li>攻击端：攻击力造数 → 技能倍率 → 增伤加成 → 暴击放大</li>
+<li>防御端：防御减伤 → 抗性减伤 → 最终伤害区</li>
+</ul>
+<blockquote>
+<p>链路中引入固定值加算（如额外造成100点伤害）时，放在防御区前还是后效果天差地别：防御前会被减伤削减（100→50），防御后全额生效（100&#x3D;100）。必须固化顺序。</p>
+</blockquote>
+<h4 id="等级差惩罚：原神的巧妙设计"><a href="#等级差惩罚：原神的巧妙设计" class="headerlink" title="等级差惩罚：原神的巧妙设计"></a>等级差惩罚：原神的巧妙设计</h4><p>防御减伤底层模板：<code>减伤 = DEF / (DEF + K×Level + C)</code></p>
+<p>关键问题：Level填谁的等级？</p>
+<table>
+<thead>
+<tr>
+<th>做法</th>
+<th>效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Level&#x3D;攻击方</strong>（原神做法）</td>
+<td><code>攻击方等级</code>同时出现在分子和分母 &#x3D; 隐性防御穿透。攻击方等级越高→等效穿透越多→实际减伤越低</td>
+</tr>
+<tr>
+<td><strong>Level&#x3D;防守方</strong></td>
+<td>分子分母对消，永远是50%，不论几级打几级。要等级惩罚必须额外加独立乘区</td>
+</tr>
+</tbody></table>
+<p>原神设计的高明之处：把等级差惩罚嵌入防御公式本身，不用额外加乘区。但代价是<strong>灵活度不高</strong>——防御减伤强弱和等级差影响幅度绑定在一起，改K和C会同步变化，没法单独调其中之一。</p>
+<hr>
+<h2 id="第三篇：攻击力（ATK）体系详解"><a href="#第三篇：攻击力（ATK）体系详解" class="headerlink" title="第三篇：攻击力（ATK）体系详解"></a>第三篇：攻击力（ATK）体系详解</h2><h3 id="攻击力的核心地位"><a href="#攻击力的核心地位" class="headerlink" title="攻击力的核心地位"></a>攻击力的核心地位</h3><p>攻击力位于伤害链路的最前端，构成基础伤害。<strong>后续增伤、暴击、防御等所有乘区均叠乘于基础伤害之上</strong>——攻击力提升会等比例放大后续所有乘区的生效效果。</p>
+<p>这也是为什么游戏前期几乎所有养成系统都大量投放攻击力：前期暴击&#x2F;增伤可获取数值很少，投入产出比远低于攻击力。<strong>前期优先堆攻击力，伤害提升见效最快。</strong></p>
+<h3 id="艾尔登法环的攻击力计算"><a href="#艾尔登法环的攻击力计算" class="headerlink" title="艾尔登法环的攻击力计算"></a>艾尔登法环的攻击力计算</h3><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">武器总攻击力 = 基础攻击力 + 补正值</span><br><span class="line"></span><br><span class="line">基础攻击力：由武器种类、强化等级(+0~+25)、质变决定</span><br><span class="line">补正值 = 基础攻击力 × 总补正系数（武器补正倍率 × 角色属性修正率）</span><br><span class="line">  补正倍率：S/A/B/C/D/E 档位，强化可提升档位</span><br><span class="line">  属性修正率：角色属性点数决定，有软上限（如力/敏在20/50/80处递减）</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>实例</strong>：同一角色（力气55、灵巧60），同为+10强化 —— 猎犬长牙 806 vs 义手刀 594，差距超过35%。</p>
+<p>差距来源两层叠加：</p>
+<ul>
+<li><strong>第一层</strong>：猎犬长牙基础面板 345 &gt; 义手刀 286。基础值又是补正的乘数——基数越大，同样补正系数算出的绝对值越大</li>
+<li><strong>第二层</strong>：猎犬长牙力气C+灵巧B &gt; 义手刀力气E+灵巧B，从力气属性获得的补正收益明显更高</li>
+</ul>
+<h3 id="三种攻击力加成类型"><a href="#三种攻击力加成类型" class="headerlink" title="三种攻击力加成类型"></a>三种攻击力加成类型</h3><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>定义</th>
+<th>运算方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>基础攻击力 (Base ATK)</strong></td>
+<td>攻击乘区的底层基准，所有ATK%的计算基数</td>
+<td>角色等级&#x2F;职业&#x2F;武器提供</td>
+</tr>
+<tr>
+<td><strong>百分比加成 (ATK%)</strong></td>
+<td>以百分比提升攻击力</td>
+<td>多个ATK%先加算求和 × Base ATK。同池加算会稀释</td>
+</tr>
+<tr>
+<td><strong>固定值加成 (Flat ATK)</strong></td>
+<td>以固定数值提升攻击力</td>
+<td>取决于公式：可能与ATK%乘算结果加算（不被放大），或与Base一起进入乘算（被放大）</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>一个重要区分：<strong>ATK%放大的是攻击力本身（改输入），技能倍率130%放大的是这一次伤害结果（改输出）。</strong> 王者荣耀没有ATK%，只有Flat和技能倍率。</p>
+</blockquote>
+<h3 id="攻击力与其他维度的关系"><a href="#攻击力与其他维度的关系" class="headerlink" title="攻击力与其他维度的关系"></a>攻击力与其他维度的关系</h3><table>
+<thead>
+<tr>
+<th>关系</th>
+<th>公式</th>
+<th>要点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>攻击力 × 攻速</strong></td>
+<td>DPS &#x3D; 单次伤害 × 攻速</td>
+<td>高攻低速→爆发秒伤；低攻高速→持续输出。注意：攻速往往只影响普攻，大多数主动技能不受攻速影响</td>
+</tr>
+<tr>
+<td><strong>攻击力 × 暴击</strong></td>
+<td>期望伤害 &#x3D; 攻击力 × (1+暴击率×暴伤)</td>
+<td>攻击力基数越低时，堆暴击的绝对收益越受限</td>
+</tr>
+<tr>
+<td><strong>攻击力 × 增伤</strong></td>
+<td>最终伤害 &#x3D; 最终攻击力 × 攻击系数 × (1+Σ增伤)</td>
+<td>两者分属不同乘区，乘算。同等幅度加成词条，在两边基础倍率一致时放哪边总收益相同；<strong>但哪边已有越多，新增同幅度词条放到另一边的相对收益越高</strong>——这就是水桶效应的实际应用</td>
+</tr>
+</tbody></table>
 <hr>
 <h2 id="可迁移思路"><a href="#可迁移思路" class="headerlink" title="可迁移思路"></a>可迁移思路</h2><ol>
-<li>结算界面只晒亮点不揭短</li>
-<li>设计”被偷龙”型归因出口</li>
-<li>多维度评判标准</li>
-<li>用”输家再来率”而非”胜率”作为 PVP 生命线</li>
+<li><p><strong>加法先立、乘法后补。</strong> 立项初期用加法搭建稳定的数值骨架（易预测、易调试），核心玩法验证通过后再引入少量乘区增加策略深度和后期养成空间。反过来先铺乘区→调试地狱。</p>
+</li>
+<li><p><strong>乘区划分的三条硬标准不只是理论。</strong> 如果发现某个装备同时大量提供多个乘区的加成 → 那是设计事故。词条供给独立性决定了配装的策略深度——各部位管不同的事，玩家才有选择空间。</p>
+</li>
+<li><p><strong>攻击力是玩家最直观的「变强感」。</strong> 前期大量投放攻击力不是数值失误，而是刻意为之——让玩家在前2-3小时的每一次升级&#x2F;换装都感受到伤害数字的明显增长。暴击和增伤是中期才开始发力的维度。</p>
+</li>
+<li><p><strong>ATK%和技能倍率不是一回事。</strong> 前者改的是面板数值（输入），后者改的是伤害结果（输出）。如果设计时把这两者混用，就会导致一些词条的实际效果被误判。</p>
+</li>
+<li><p><strong>原神的等级差惩罚设计是教科书式的技巧。</strong> 通过让攻击方等级同时出现在防御公式的分子和分母，隐性地把「等级&#x3D;防御穿透」嵌入了单一公式——不需要额外加乘区。代价是灵活度低，但胜在简洁优雅。</p>
+</li>
+</ol>
+<hr>
+<h1 id="第四篇：命中率与各类增伤详解"><a href="#第四篇：命中率与各类增伤详解" class="headerlink" title="第四篇：命中率与各类增伤详解"></a>第四篇：命中率与各类增伤详解</h1><h2 id="命中率（HIT-Rate）"><a href="#命中率（HIT-Rate）" class="headerlink" title="命中率（HIT Rate）"></a>命中率（HIT Rate）</h2><p>命中是攻击方确保攻击生效的概率属性，常与闪避（EVA）构成攻防对偶。命中判定失败 → MISS，随攻击附着的 DOT&#x2F;debuff 同步失效，相当于<strong>这次出手完全无效。</strong></p>
+<h3 id="三种常见结算公式"><a href="#三种常见结算公式" class="headerlink" title="三种常见结算公式"></a>三种常见结算公式</h3><table>
+<thead>
+<tr>
+<th>公式类型</th>
+<th>规则</th>
+<th>特点</th>
+<th>代表游戏</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>减法公式</strong></td>
+<td>HIT - EVA</td>
+<td>简单直观，国内MMO&#x2F;放置卡牌最常用</td>
+<td>多数国产网游</td>
+</tr>
+<tr>
+<td><strong>除法公式</strong></td>
+<td>HIT &#x2F; (HIT + EVA)</td>
+<td>天然收敛，不会绝对必中&#x2F;必不中，但收益感知不够直观。常设5%-95%硬限</td>
+<td>少女前线、流放之路</td>
+</tr>
+<tr>
+<td><strong>分层判定</strong></td>
+<td>按固定优先级依次骰子判定（失误→闪避→招架→格挡）</td>
+<td>拆分多条平行养成线，战斗随机层次丰富，但理解成本最高、平衡调试最难</td>
+<td>魔兽世界</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>注意事项：FPS 中的命中通常指武器精度&#x2F;弹道散布，是手感属性而非概率判定——精度拉满但瞄歪了照样打空。</p>
+</blockquote>
+<h3 id="分层判定模型详解"><a href="#分层判定模型详解" class="headerlink" title="分层判定模型详解"></a>分层判定模型详解</h3><table>
+<thead>
+<tr>
+<th>判定层</th>
+<th>作用</th>
+<th>攻方堆命中能解决吗？</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>自身失误</td>
+<td>攻击者判定是否失误落空</td>
+<td>✅ 降低失误概率</td>
+</tr>
+<tr>
+<td>目标闪避</td>
+<td>目标主动躲避</td>
+<td>❌ 无法直接抵消</td>
+</tr>
+<tr>
+<td>目标招架</td>
+<td>目标武器格挡</td>
+<td>❌ 无法直接抵消</td>
+</tr>
+<tr>
+<td>目标格挡</td>
+<td>目标盾牌格挡</td>
+<td>❌ 无法直接抵消</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="增伤体系：伤害实例的标签匹配"><a href="#增伤体系：伤害实例的标签匹配" class="headerlink" title="增伤体系：伤害实例的标签匹配"></a>增伤体系：伤害实例的标签匹配</h2><h3 id="核心概念：伤害实例"><a href="#核心概念：伤害实例" class="headerlink" title="核心概念：伤害实例"></a>核心概念：伤害实例</h3><p>每一次独立跳出的伤害数字 &#x3D; 一个伤害实例。普攻命中、技能爆炸、持续伤害跳字互不影响。系统给每个伤害实例打上专属标签：属性类型、攻击&#x2F;技能类型、触发条件（目标为BOSS&#x2F;目标血量低于50%）。最终严格按标签匹配判定能吃到哪些增伤。</p>
+<h3 id="增伤乘区统一公式（以原神-崩铁为代表）"><a href="#增伤乘区统一公式（以原神-崩铁为代表）" class="headerlink" title="增伤乘区统一公式（以原神&#x2F;崩铁为代表）"></a>增伤乘区统一公式（以原神&#x2F;崩铁为代表）</h3><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">增伤乘区 = 1 + 全局增伤 + 属性增伤 + 技能增伤 + 条件增伤</span><br></pre></td></tr></table></figure></div>
+
+<p><strong>所有增伤类词条同区加算 → 全部存在边际收益递减。</strong></p>
+<blockquote>
+<p>已有+100%增伤时，再获+20%全局增伤 → 实际相对提升 &#x3D; 2.2÷2-1 &#x3D; 10%，不是字面的20%。</p>
+</blockquote>
+<h3 id="增伤类型详解"><a href="#增伤类型详解" class="headerlink" title="增伤类型详解"></a>增伤类型详解</h3><h4 id="1-全局伤害加成"><a href="#1-全局伤害加成" class="headerlink" title="1. 全局伤害加成"></a>1. 全局伤害加成</h4><p>不带任何限定前缀的「造成的伤害提高X%」，覆盖普攻、技能、终结技、追加攻击等绝大多数伤害类型。</p>
+<h4 id="2-属性伤害加成"><a href="#2-属性伤害加成" class="headerlink" title="2. 属性伤害加成"></a>2. 属性伤害加成</h4><p>标签匹配类增伤——只有伤害实例带有对应属性标签时才生效。火伤加成只给火属性伤害，无法增益其他属性。设计目的：<strong>引导玩家优先堆叠主输出属性的增伤，让角色输出特征更鲜明。</strong></p>
+<h5 id="原神元素反应与属性增伤的关系"><a href="#原神元素反应与属性增伤的关系" class="headerlink" title="原神元素反应与属性增伤的关系"></a>原神元素反应与属性增伤的关系</h5><table>
+<thead>
+<tr>
+<th>反应类型</th>
+<th>机制</th>
+<th>属性增伤是否生效</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>增幅反应</strong>（蒸发&#x2F;融化）</td>
+<td>给原始直伤乘上固定反应倍率，不产生独立伤害</td>
+<td>✅ 火伤&#x2F;冰伤&#x2F;水伤等比例放大最终伤害</td>
+</tr>
+<tr>
+<td><strong>激化反应</strong>（超激化&#x2F;蔓激化）</td>
+<td>给触发的雷&#x2F;草直伤额外附加一段激化数值，合并后正常吃属性增伤和暴击</td>
+<td>✅ 雷&#x2F;草属性增伤生效</td>
+</tr>
+<tr>
+<td><strong>剧变反应</strong>（超载&#x2F;超导&#x2F;感电&#x2F;绽放）</td>
+<td>单独跳出一个独立伤害数字，脱离角色常规攻击面板</td>
+<td>❌ 不吃属性增伤&#x2F;攻击力&#x2F;双暴，只吃等级&#x2F;精通&#x2F;反应加成&#x2F;抗性</td>
+</tr>
+</tbody></table>
+<h5 id="属性增伤-≠-属性穿透-减抗"><a href="#属性增伤-≠-属性穿透-减抗" class="headerlink" title="属性增伤 ≠ 属性穿透&#x2F;减抗"></a>属性增伤 ≠ 属性穿透&#x2F;减抗</h5><p>两者分属不同乘区：</p>
+<ul>
+<li><strong>属性增伤</strong>：强化自己打出去的伤害（攻方乘区）</li>
+<li><strong>属性穿透&#x2F;减抗</strong>：降低目标承受伤害的能力（对方乘区）</li>
+</ul>
+<h4 id="3-持续伤害加成（DoT）"><a href="#3-持续伤害加成（DoT）" class="headerlink" title="3. 持续伤害加成（DoT）"></a>3. 持续伤害加成（DoT）</h4><p>DoT &#x3D; 在持续时间内按固定节奏反复结算多次。</p>
+<h5 id="DoT-结算机制"><a href="#DoT-结算机制" class="headerlink" title="DoT 结算机制"></a>DoT 结算机制</h5><table>
+<thead>
+<tr>
+<th>机制</th>
+<th>规则</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>快照（Snapshot）</strong></td>
+<td>DoT施加瞬间锁定当时所有面板&#x2F;Buff，挂上后新增增伤&#x2F;攻击都不改变已有DoT</td>
+</tr>
+<tr>
+<td><strong>实时结算</strong></td>
+<td>每跳参考角色当前属性，中途获得Buff立刻提高后续伤害</td>
+</tr>
+<tr>
+<td><strong>混合机制</strong></td>
+<td>部分数值施加快照，部分每跳重新检查</td>
+</tr>
+</tbody></table>
+<h5 id="DoT-vs-攻速"><a href="#DoT-vs-攻速" class="headerlink" title="DoT vs 攻速"></a>DoT vs 攻速</h5><p>攻速通常不直接提高已挂DoT的单跳伤害，也不缩短结算间隔。但如果DoT来源是「攻击命中时概率施加」→ 攻速提升单位时间攻击次数 → <strong>提高施加&#x2F;刷新&#x2F;叠层概率。</strong></p>
+<blockquote>
+<p>注意：DoT 不一定吃攻击&#x2F;属性增伤&#x2F;双暴&#x2F;防御，取决于游戏设计。不是所有游戏都让 DoT 走常规伤害体系。</p>
+</blockquote>
+<h4 id="4-BOSS伤害加成"><a href="#4-BOSS伤害加成" class="headerlink" title="4. BOSS伤害加成"></a>4. BOSS伤害加成</h4><p>按目标类别触发的条件增伤——检查目标是否带有首领&#x2F;精英标签。</p>
+<table>
+<thead>
+<tr>
+<th>容易混淆的点</th>
+<th>区别</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>对首领增伤</td>
+<td>检查目标的<strong>固定类别</strong></td>
+</tr>
+<tr>
+<td>对血量&lt;30%敌人增伤</td>
+<td>检查目标当前是否满足<strong>临时状态</strong></td>
+</tr>
+<tr>
+<td>对首领伤害提高</td>
+<td><strong>攻击者自身的条件增伤</strong></td>
+</tr>
+<tr>
+<td>首领受到伤害提高</td>
+<td><strong>施加在首领身上的易伤&#x2F;承伤提升</strong></td>
+</tr>
+</tbody></table>
+<p>根据游戏设计，BOSS_DMG 可定义为独立乘区（最终伤害&#x3D;常规伤害×(1+ΣBOSS_DMG)），也可归入普通增伤乘区加算。</p>
+<h4 id="5-最终伤害类加成（FINAL-DMG）"><a href="#5-最终伤害类加成（FINAL-DMG）" class="headerlink" title="5. 最终伤害类加成（FINAL_DMG）"></a>5. 最终伤害类加成（FINAL_DMG）</h4><p>在基础伤害、增伤区、暴击区、防御&#x2F;抗性区全部计算完成后，<strong>最后作为独立倍率层参与结算</strong>，不和前置乘区的词条产生加算稀释。</p>
+<h5 id="案例：《鸣潮》延奏技能"><a href="#案例：《鸣潮》延奏技能" class="headerlink" title="案例：《鸣潮》延奏技能"></a>案例：《鸣潮》延奏技能</h5><p>部分角色延奏为下一位登场角色提供特定类型的「伤害加深」：</p>
+<ul>
+<li>共鸣解放伤害加深 → 只在效果持续期间使用共鸣解放造成伤害时获得独立倍率</li>
+<li>普攻&#x2F;共鸣解放&#x2F;不匹配的伤害类型不受强化</li>
+</ul>
+<blockquote>
+<p>配队时不仅要看「伤害加深」百分比，还要看它是否匹配主力角色的<strong>主要输出类型和实际输出窗口。</strong> 注意鸣潮中多个加深来源之间是加算的。</p>
+</blockquote>
+<hr>
+<h2 id="可迁移思路（第四篇补充）"><a href="#可迁移思路（第四篇补充）" class="headerlink" title="可迁移思路（第四篇补充）"></a>可迁移思路（第四篇补充）</h2><ol>
+<li><p><strong>命中率公式选减法还是除法，取决于你承不承受得起「绝对必中&#x2F;必不中」。</strong> 减法公式简单但容易出现 100% 命中或 0% 命中的边界情况，除法公式天然收敛但玩家算不清。分层判定模型体验最丰富但调试成本最高——MMO 用分层、二次元卡牌用减法、硬核单机可以考虑除法。</p>
+</li>
+<li><p><strong>增伤区的所有词条同区加算——这个设计选择比你想的重要。</strong> 同区加算 → 玩家堆再多不同类型的增伤都会有边际递减，这迫使玩家追求「水桶式均衡」而不是单维度拉满。如果想鼓励某种极端 build，把它单独拉出来做独立乘区。</p>
+</li>
+<li><p><strong>DoT 的快照 vs 实时结算，影响的是战斗节奏。</strong> 快照机制鼓励「爆发窗口期全力上 DoT」，实时机制鼓励「持续保持 Buff 覆盖」。选哪个取决于你的战斗设计是偏回合型爆发还是偏持续拉扯。</p>
+</li>
+<li><p><strong>属性增伤和元素反应的关系要提前设计清楚，不然后面全是坑。</strong> 原神的三类反应对属性增伤的不同处理（增幅能吃、激化能吃附加部分、剧变完全不吃）——这种差异化不是 BUG，是有意为之的设计分层。但如果没有提前规划，玩家发现「明明写了火伤加成结果这个反应不吃」就是事故。</p>
+</li>
 </ol>
 
 	</div>
