@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    
+    <meta name="author" content="Seagull OO">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes ASAP (before DOMContentLoaded)
+            (function() {
+                const addBodyClass = () => {
+                    const b = document.body;
+                    if (!b) return false;
+                    b.classList.add(theme + "-mode");
+                    return true;
+                };
+
+                // Try immediately
+                if (addBodyClass()) return;
+
+                // Observe until body exists
+                const mo = new MutationObserver(() => {
+                    if (addBodyClass()) mo.disconnect();
+                });
+                mo.observe(document.documentElement, { childList: true, subtree: true });
+            })();
+        })();
+    </script>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="http://example.com/wiki/03-游戏设计/02-战斗系统/射击游戏后坐力的五个设计维度.html"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="射击游戏后坐力的五个设计维度：强度、方向、随机、回正与阶段性">
+<meta property="og:url" content="http://example.com/wiki/03-%E6%B8%B8%E6%88%8F%E8%AE%BE%E8%AE%A1/02-%E6%88%98%E6%96%97%E7%B3%BB%E7%BB%9F/%E5%B0%84%E5%87%BB%E6%B8%B8%E6%88%8F%E5%90%8E%E5%9D%90%E5%8A%9B%E7%9A%84%E4%BA%94%E4%B8%AA%E8%AE%BE%E8%AE%A1%E7%BB%B4%E5%BA%A6.html">
+<meta property="og:site_name" content="海鸥整点百香果">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/redefine-og.webp">
+<meta property="article:published_time" content="2026-09-20T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-09-21T12:51:12.285Z">
+<meta property="article:author" content="Bottle OO">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/favicon.svg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.svg">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/favicon.svg">
+    <!--- Page Info-->
+    
+    <title>
+        
+            射击游戏后坐力的五个设计维度：强度、方向、随机、回正与阶段性 | Seagull OO
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+    
+    
+        
+<script src="/js/build/libs/anime.min.js"></script>
+
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"example.com","root":"/","language":"en","path":"search.xml"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"github","dark":"vs2015"},"font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/wallhaven-wqery6-light.webp","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"drak"},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":true,"custom_message":"Wang's Blog"},"side_tools":{"gear_rotation":true,"auto_expand":false},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"https://i.mji.rip/2026/03/11/9ceaacc84d00f7ad74c1bf8587b71927.jpeg","dark":"https://i.mji.rip/2026/03/11/9ceaacc84d00f7ad74c1bf8587b71927.jpeg"},"title":"Seagull OO","subtitle":{"text":["学习中"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#F5F5F5","dark":"#F5F5F5"},"text_style":{"title_size":"3.5rem","subtitle_size":"1.7rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"style":"default","links":[{"icon":"fa-brands fa-github","url":null},{"icon":"fa-brands fa-twitter","url":null},{"icon":"fa-solid fa-at","url":"you@example.com"},{"icon":"fa-brands fa-telegram","url":null},{"icon":"/images/custom-icon.svg","url":null}],"qrs":[{"icon":"fa-brands fa-weixin","qr":null},{"icon":"/images/custom-icon.svg","qr":null}]}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1","theme":{"light":"default","dark":"dark"}}},"version":"2.9.0","navbar":{"auto_hide":false,"color":{"left":"#696969","right":"#696969","transparency":35},"width":{"home":"1200px","pages":"1200px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"},"Archives":{"path":"/archives","icon":"fa-regular fa-archive"},"Categories":{"path":"/categories","icon":"fa-solid fa-folder"},"Tags":{"path":"/tags","icon":"fa-solid fa-tags"},"Wiki":{"path":"/wiki","icon":"fa-solid fa-book"},"Portfolio":{"path":"/masonry","icon":"fa-regular fa-link"},"About":{"icon":"fa-regular fa-user","submenus":{"Me":"/about","Github":"https://github.com/SeagullOO"}}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur","masonry":{"batch_size":12,"initial_batch_size":24}},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footer":{"runtime":true,"icon":"<i class=\"fa-solid fa-heart fa-beat\" style=\"--fa-animation-duration: 0.5s; color: #f54545\"></i>","start":"2022/8/17 11:45:14","statistics":true,"customize":null,"icp":{"enable":false,"number":null,"url":null}},"footerStart":"2022/8/17 11:45:14","mermaid":{"style":{"light":"default","dark":"dark"}}};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.i18n = {"search":"Search...","toc":"On this page","prev":"Prev","next":"Next","prev_posts":"Prev posts","next_posts":"Next posts","page":"Page %d","recent_posts":"Recent Posts","share":"Share","powered_by":"POWERED BY %s","theme":"THEME","rss_feed":"RSS Feed","category":"Category","categories":"Categories","tag":"Tag","tags":"Tags","post":"Post","posts":"Posts","tagcloud":"Tag Cloud","comment":"Comment","comments":"Comments","home":"Home","archive":"Archive","archives":"Archives","top":"TOP","sticky":"Sticky","go-back-home":"Go Back Home","masonry_loading":"Loading photos...","image_viewer":"Image viewer","close":"Close","exif":{"title":"EXIF","cards":{"camera":"Camera","lens":"Lens","exposure":"Exposure","other":"Other"},"fields":{"make":"Brand","model":"Model","date_taken":"Date taken","lens_model":"Lens","focal_length":"Focal length","focus_mode":"Focus mode","shutter":"Shutter","aperture":"Aperture","iso":"ISO","exposure_program":"Exposure program","exposure_compensation":"Exposure compensation","metering_mode":"Metering mode","flash":"Flash","white_balance":"White balance","latitude":"Latitude","longitude":"Longitude","altitude":"Altitude"},"status":{"loading":"Loading...","no_exif":"No EXIF available","library_missing":"EXIF library not loaded","image_source_missing":"Image source unavailable","unavailable":"EXIF unavailable (blocked by CORS or missing metadata)","flag_unavailable":"EXIF unavailable"}},"about":"About","changelog":"Changelog","links":"Links","link":"Link","friends":"Friends","friend":"Friend","timeline":"Timeline","shuoshuo":"Shuoshuo","bookmarks":"Bookmarks","site_uv":"VISITOR COUNT","site_pv":"TOTAL PAGE VIEWS","read_more":"Read more","wordcount":"Words","min2read":"Mins","status":"Status","runtime":"Blog up for","days":"days","hours":"hrs","minutes":"Min","seconds":"Sec","optimized_by":"and Optimized by Evan","rights":"All Rights Reserved","site_posts":"%s posts in total","site_wordcount":"%s words in total","copyright":{"author":"Author","title":"Title","link":"Link","create_time":"Created at","update_time":"Updated at","license_title":"License","license_content":"This work is licensed under %s.","all_rights_reserved":"All Rights Reserved &#169; %s","public_domain":"This work is in the public domain."},"ago":{"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"},"create_time":"Created","update_time":"Updated","expired":"This post is written %s days ago, and the content may not be up to date."};
+    window.data = {"masonry":true};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<style>
+    :root {
+        --preloader-background-color: #fff;
+        --preloader-text-color: #000;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --preloader-background-color: #202124;
+            --preloader-text-color: #fff;
+        }
+    }
+
+    @media (prefers-color-scheme: light) {
+        :root {
+            --preloader-background-color: #fff;
+            --preloader-text-color: #000;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .ml13 {
+            font-size: 2.6rem !important; /* Adjust this value as needed */
+        }
+    }
+
+    .preloader {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem; /* Tailwind 'gap-4' is 1rem */
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        padding: 12px;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh; /* 'h-screen' is 100% of the viewport height */
+        background-color: var(--preloader-background-color);
+        z-index: 1100; /* 'z-[1100]' sets the z-index */
+        transition: opacity 0.2s ease-in-out;
+    }
+
+    .ml13 {
+        font-size: 3.2rem;
+        /* text-transform: uppercase; */
+        color: var(--preloader-text-color);
+        letter-spacing: -1px;
+        font-weight: 500;
+        font-family: 'Chillax-Variable', sans-serif;
+        text-align: center;
+    }
+
+    .ml13 .word {
+        display: inline-flex;
+        flex-wrap: wrap;
+        white-space: nowrap;
+    }
+
+    .ml13 .letter {
+        display: inline-block;
+        line-height: 1em;
+    }
+</style>
+
+<div class="preloader">
+    <h2 class="ml13">
+        Wang&#39;s Blog
+    </h2>
+    <script>
+        var textWrapper = document.querySelector('.ml13');
+        // Split text into words
+        var words = textWrapper.textContent.trim().split(' ');
+
+        // Clear the existing content
+        textWrapper.innerHTML = '';
+
+        // Wrap each word and its letters in spans
+        words.forEach(function(word) {
+            var wordSpan = document.createElement('span');
+            wordSpan.classList.add('word');
+            wordSpan.innerHTML = word.replace(/\S/g, "<span class='letter'>$&</span>");
+            textWrapper.appendChild(wordSpan);
+            textWrapper.appendChild(document.createTextNode(' ')); // Add space between words
+        });
+
+        var animation = anime.timeline({ loop: true })
+            .add({
+                targets: '.ml13 .letter',
+                translateY: [20, 0],
+                translateZ: 0,
+                opacity: [0, 1],
+                filter: ['blur(5px)', 'blur(0px)'],
+                easing: "easeOutExpo",
+                duration: 1200,
+                delay: (el, i) => 300 + 20 * i,
+            })
+            .add({
+                targets: '.ml13 .letter',
+                translateY: [0, -20],
+                opacity: [1, 0],
+                filter: ['blur(0px)', 'blur(5px)'],
+                easing: "easeInExpo",
+                duration: 1000,
+                delay: (el, i) => 15 * i,
+                complete: function() {
+                    hidePreloader();
+                }
+            }, '-=700');
+
+
+        let themeStatus = JSON.parse(localStorage.getItem('REDEFINE-THEME-STATUS'))?.isDark;
+
+        // If the theme status is not found in local storage, check the preferred color scheme
+        if (themeStatus === undefined || themeStatus === null) {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                themeStatus = 'dark';
+            } else {
+                themeStatus = 'light';
+            }
+        }
+
+        // Now you can use the themeStatus variable in your code
+        if (themeStatus) {
+            document.documentElement.style.setProperty('--preloader-background-color', '#202124');
+            document.documentElement.style.setProperty('--preloader-text-color', '#fff');
+        } else {
+            document.documentElement.style.setProperty('--preloader-background-color', '#fff');
+            document.documentElement.style.setProperty('--preloader-text-color', '#000');
+        }
+
+        window.addEventListener('load', function () {
+            setTimeout(hidePreloader, 5000); // Call hidePreloader after 5000 milliseconds if not already called by animation
+        });
+
+        function hidePreloader() {
+            var preloader = document.querySelector('.preloader');
+            preloader.style.opacity = '0';
+            setTimeout(function () {
+                preloader.style.display = 'none';
+            }, 200);
+        }
+    </script>
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/">
+                    <img src="/images/favicon.svg" class="w-full h-full rounded-xs">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                Seagull OO
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/archives"
+                                        >
+                                    <i class="fa-regular fa-archive fa-fw"></i>
+                                    ARCHIVES
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/categories"
+                                        >
+                                    <i class="fa-solid fa-folder fa-fw"></i>
+                                    CATEGORIES
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/tags"
+                                        >
+                                    <i class="fa-solid fa-tags fa-fw"></i>
+                                    TAGS
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="active"
+                                   href="/wiki"
+                                        >
+                                    <i class="fa-solid fa-book fa-fw"></i>
+                                    WIKI
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/masonry"
+                                        >
+                                    <i class="fa-regular fa-link fa-fw"></i>
+                                    PORTFOLIO
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="has-dropdown"
+                                   href="#"
+                                        onClick=&#34;return false;&#34;>
+                                    <i class="fa-regular fa-user fa-fw"></i>
+                                    ABOUT
+                                    <i class="fa-solid fa-chevron-down fa-fw"></i>
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                                    <ul class="sub-menu">
+                                        
+                                            <li>
+                                                <a href="/about">
+                                                    ME
+                                                </a>
+                                            </li>
+                                        
+                                            <li>
+                                                <a target="_blank" rel="noopener" href="https://github.com/SeagullOO">
+                                                    GITHUB
+                                                </a>
+                                            </li>
+                                        
+                                    </ul>
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/archives"
+                        >
+                            <span>
+                                ARCHIVES
+                            </span>
+                            
+                                <i class="fa-regular fa-archive fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/categories"
+                        >
+                            <span>
+                                CATEGORIES
+                            </span>
+                            
+                                <i class="fa-solid fa-folder fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/tags"
+                        >
+                            <span>
+                                TAGS
+                            </span>
+                            
+                                <i class="fa-solid fa-tags fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full active"
+                           href="/wiki"
+                        >
+                            <span>
+                                WIKI
+                            </span>
+                            
+                                <i class="fa-solid fa-book fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/masonry"
+                        >
+                            <span>
+                                PORTFOLIO
+                            </span>
+                            
+                                <i class="fa-regular fa-link fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item-sub text-base my-1.5 flex flex-col w-full">
+                        
+                        <div class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary cursor-pointer text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                             navbar-data-toggle="submenu-About"
+                        >
+                            <span>
+                                ABOUT
+                            </span>
+                            
+                                <i class="fa-solid fa-chevron-right fa-sm fa-fw transition-all"></i>
+                            
+                        </div>
+                        
+
+                        
+                            <div class="flex-col items-start px-2 py-2 hidden" data-target="submenu-About">
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           href="/about">ME</a>
+                                    </div>
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           target="_blank" rel="noopener" href="https://github.com/SeagullOO">GITHUB</a>
+                                    </div>
+                                
+                            </div>
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">5</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">6</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">13</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="page-template-container">
+	
+
+	
+
+	<div class="page-template-content markdown-body">
+		
+		<h1>射击游戏后坐力的五个设计维度：强度、方向、随机、回正与阶段性</h1>
+		
+
+		<h1 id="射击游戏后坐力的五个设计维度：强度、方向、随机、回正与阶段性"><a href="#射击游戏后坐力的五个设计维度：强度、方向、随机、回正与阶段性" class="headerlink" title="射击游戏后坐力的五个设计维度：强度、方向、随机、回正与阶段性"></a>射击游戏后坐力的五个设计维度：强度、方向、随机、回正与阶段性</h1><blockquote>
+<p>原文链接：<a class="link"   target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/rQvZ6Ev5mS_UfUKFXc6gsA" >https://mp.weixin.qq.com/s/rQvZ6Ev5mS_UfUKFXc6gsA<i class="fa-solid fa-arrow-up-right ml-[0.2em] font-light align-text-top text-[0.7em] link-icon"></i></a><br>作者：GAMEOFFER<br>标签：#FPS #后坐力 #战斗系统 #武器设计 #射击手感</p>
+</blockquote>
+<hr>
+<p>所谓后坐力，想必玩过射击游戏的同学们对此都不会陌生。</p>
+<p>在第一人称射击（First-Person Shooter，FPS）游戏中，后坐力（Recoil）是影响武器操作手感、设计准确性与战斗节奏控制的重要机制之一。</p>
+<p>现实中的后坐力并非单一来源，而是由多部分共同组成。</p>
+<p>最直观的部分是弹头射出时其本身的动量，根据动量守恒，当火药燃气推动弹头向前加速时会给枪身一个向后的等效动量，这就是后坐力的主要来源；此外，由于子弹飞出枪口后，大量高温燃气会从枪口喷出，此时的枪口会产生火箭效应进一步增加后坐力。</p>
+<p>而游戏术语的后坐力与现实的后坐力，完全不是一个东西。</p>
+<h2 id="后坐力系统是什么？"><a href="#后坐力系统是什么？" class="headerlink" title="后坐力系统是什么？"></a>后坐力系统是什么？</h2><p>对玩家而言，游戏中的后坐力通常表现为：持续射击时，武器的瞄准逐渐偏离原始位置，并需要通过输入操作进行修正的现象。</p>
+<p>其效果的实现通常由多个部分组成：</p>
+<ol>
+<li><p>实际弹道偏移——即子弹最终能否按照准心原本指向的位置命中。</p>
+</li>
+<li><p>镜头或视角后坐——玩家开枪以后，其第一人称摄像机一般会向上发生”View Kick”，使玩家看到的画面发生变化。</p>
+</li>
+<li><p>武器模型运动——枪械模型本身可以在设计时向后、向上发生运动带给玩家视觉反馈。</p>
+</li>
+<li><p>其他视觉与听觉反馈——如枪口火焰、屏幕震动、弹壳落地声、子弹破空声等。</p>
+</li>
+</ol>
+<h2 id="后坐力该如何设计？"><a href="#后坐力该如何设计？" class="headerlink" title="后坐力该如何设计？"></a>后坐力该如何设计？</h2><p>后坐力不是越难控制就越好。当我们在设计武器时，应该先确认该武器定位，然后根据武器的定位去设计后坐力的各个因素。</p>
+<h3 id="1-后坐力强度"><a href="#1-后坐力强度" class="headerlink" title="1. 后坐力强度"></a>1. 后坐力强度</h3><p>后坐力强度可以分为垂直后座与水平后坐。</p>
+<p>垂直后座可以简单理解为，当射手受到后坐力时，后坐冲量对支点（手腕或肩部）产生的力矩导致枪口上跳，而这个力矩的大小与枪管轴线到抵肩点或握持支点的垂直距离成正相关——枪管轴线越高，枪托向下弯曲越大，力臂越大，枪口上跳就更明显。</p>
+<p>M4这种直枪托、低轴线的设计，能够让后坐力更接近握持位置，所以他的垂直后坐会明显小于AK这种长行程活塞+高质心的武器。</p>
+<p>而水平后坐是子弹沿螺旋膛线旋转前进时，会对枪管施加一个反向扭矩，如果枪口出现磨损或本身存在燃气分布不均的情况，枪口火焰喷出时产生的火箭效应会进一步增加枪口的不规则摆动，最终导致除上文的垂直后坐力外，还形成一个左右摇晃的水平后坐力。</p>
+<p>当我们设计后坐时，往往会参考现实中该武器的特点，并结合游戏整体基调确认这些数字怎么填。</p>
+<p>对于FPS玩家而言，垂直后座的控制难度明显是低于水平后坐的，面对向上的偏移，多数时候玩家只要向下平移鼠标就能压住；而水平的后坐存在向左与向右的情况，不熟悉后坐轨迹的玩家会因此受到非常大的影响。</p>
+<h3 id="2-后坐力方向与规律"><a href="#2-后坐力方向与规律" class="headerlink" title="2. 后坐力方向与规律"></a>2. 后坐力方向与规律</h3><p>在如今的多数游戏中，后坐力的方向设计分为两种。</p>
+<p>第一种是固定方向模式，这种设计在早期的FPS中较为常见，当玩家连续射击时，水平后坐力将保持同一方向。</p>
+<p>而现在比较常见的是第二种，即变换方向模式。</p>
+<p>在现实中，由于枪管磨损、制造公差等因素，枪口燃气的喷射角度往往是不一样的，这就导致连续开火时，每一发的后坐力方向也有所差别——基于这一现象，策划们设计了变换方向模式。</p>
+<p>当玩家射击时，后坐力方向将会沿某个特定的规律在各个方向间切换——以《三角洲行动》为例，图中的ASVAL突击步枪在连射时，后坐力方向会呈现，并总是呈现一个”前8发向右，然后向左，然后再向右”的一个循环。</p>
+<p>这种设计不仅更贴合实际，也能提升压枪的学习成本，进一步提升高技术力玩家的优势。</p>
+<h3 id="3-后坐力的随机性（已经被主流淘汰）"><a href="#3-后坐力的随机性（已经被主流淘汰）" class="headerlink" title="3. 后坐力的随机性（已经被主流淘汰）"></a>3. 后坐力的随机性（已经被主流淘汰）</h3><p>在FPS发展的早期，很多开发团队都通过伪随机算法的方式，通过在指定范围内随机生成下一发子弹的位置模拟枪械后坐力。</p>
+<p>但这种设计对于竞技游戏并不可取，因为完全随机的后坐会导致玩家很难通过练习建立稳定的控制方法，所以这种设计最后被主流淘汰，只有在少数独立游戏中还在采用这种方法。</p>
+<p>所以，我们如今见到的由随机弹道产生的名场面，很多都不是源自后坐力而是MOA。</p>
+<h3 id="4-后坐力回正"><a href="#4-后坐力回正" class="headerlink" title="4. 后坐力回正"></a>4. 后坐力回正</h3><p>玩家停止射击后，武器多久能够恢复到稳定状态，也是非常重要的参数，它能够直接影响一把武器的定位。</p>
+<p>在后座较大的情况下，回正较慢的武器玩家会更倾向于短点射或长时间的压制；一款回正较快的武器则更适合进攻、突破的激进玩法。</p>
+<p>在前段时间很火的单机游戏《逃离鸭科夫》后期存在一种现象：由于该游戏的开镜移速减益过于夸张，导致后期玩家都会无脑带上各种减少腰射散布，提升回正速度的配件，一套”腰射流”打全场——这么改出来的枪不仅不用吃瞄具夸张的移速减益，还能保持稳定的高精度射击，因为过高的回正速度让武器在出现后坐力效果之前就恢复了。</p>
+<p>作为一款单机游戏，苏打组这么设计自然没问题，他们在之后为瞄具增加增伤词条的设计更是一绝。但如果我们要设计的游戏带有PVP要素，我们就需要特别注意回正，特别是它的极限数值。</p>
+<h3 id="5-后坐力的阶段性"><a href="#5-后坐力的阶段性" class="headerlink" title="5. 后坐力的阶段性"></a>5. 后坐力的阶段性</h3><p>在2022年，《彩虹六号：围攻》推出了新的阶段性后坐力系统。</p>
+<p>他们为后坐力设计了一个变化参数——玩家连续射击的时间越长，后坐力的强度与变向频率就会越高——这种变化通常会分为三个阶段，弹容较大的武器还会有第四个。</p>
+<p>而《逃离塔科夫》则选择了另一个方向——武器的后坐力会随着玩家的持续射击逐渐减弱。</p>
+<p>二者的差异源自游戏定位的不同：作为一款FPS战术拟真竞技游戏，《围攻》需要保证对局双方的公平性，所以他需要这种设计来限制重机枪等大弹容武器的持续火力，迫使玩家需要管理射击时机。</p>
+<p>而《塔科夫》也存在这种公平性设计，但他们的方式是通过”持续射击导致过热降低武器耐久””弹药成本需要自掏腰包””长时间举枪瞄准手部耐力耗尽产生更大的晃动”的局外设计，后坐力逐渐减弱的设计为了还原真实战场上射手通过肌肉记忆逐渐熟悉控制枪械的过程，二者的出发点与服务对象不一致，导致了这种差异化设计。</p>
+<h2 id="案例分析"><a href="#案例分析" class="headerlink" title="案例分析"></a>案例分析</h2><p>仅凭前文的参数，很容易将后坐力理解为一套彼此独立的数值设计。在商业游戏中，后坐力往往与武器性能、战斗节奏、角色系统以及整体定位共同作用。</p>
+<h3 id="《彩虹六号：围攻》——肌无力干员背后的平衡思路"><a href="#《彩虹六号：围攻》——肌无力干员背后的平衡思路" class="headerlink" title="《彩虹六号：围攻》——肌无力干员背后的平衡思路"></a>《彩虹六号：围攻》——肌无力干员背后的平衡思路</h3><p>作为一款持续运营十一年的老游戏，《彩虹六号：围攻》的后坐力系统根据游戏环境进行过多次调整，其中最具有代表性的重做发生在2017年。</p>
+<p>在早期设计中，游戏通过一个具有随机性的区域计算后续子弹的落点：第一发子弹按照玩家瞄准方向发射，之后每一发子弹根据上一发的位置，在一个”钻石区域”内随机选择新的偏移位置。</p>
+<p>这种算法能够形成一定的喷射效果，但也意味着连续射击的结果高度依赖运气，Ubisoft认为这种设计会让武器显得”erratic or unpredictable”（不可预测），因此重新设计了整个后坐力系统。</p>
+<p>新的系统被称作 Multi-Stage-Recoil（多阶段后坐力）。</p>
+<p>其核心思想是：开发者针对自动射击的不同阶段设置不同的后坐力数据，例如前5发是某个参数，第6发到第10发是某个参数，第10发之后是某个参数。</p>
+<p>为了避免玩家面对数量过于庞大的弹道模式，Ubisoft将武器划分为不同的”后坐力家族”，使同一组武器具有相似的整体模式，再通过细节差异保证武器之间仍存在区别。</p>
+<p>这一思路在2022年Y7S3-残酷的蜂群中进一步发展，在这个赛季，他们明确规定：持续射击时间越长，垂直和水平后坐强度越高。</p>
+<p>与此同时，开发团队重新评估了所有武器的垂直后座，使其与武器预期的活力水平相匹配。</p>
+<p>在这个设计中，一把自动武器的连射存在一个逐渐提高的控制成本：</p>
+<ul>
+<li>短点射→容易控制</li>
+<li>中距离扫射→开始出现明显后坐</li>
+<li>长时间扫射→后坐非常难压</li>
+<li>大容量武器持续压制→几乎不可能控制</li>
+</ul>
+<p>在设计层面上，他们形成了一个非常明确的因果链：</p>
+<p>持续射击 → 后坐提升 → 压不住 → 持续射击收益下降 → 玩家开始主动管理开火时间</p>
+<p>此时，后坐力系统承担的不只是武器反馈功能，而是一种射击节奏的抑制器——对于LMG（轻机枪）等大弹匣武器而言，更强的后坐力阶段意味着”大弹容”不能简单等价于”无成本的持续火力”。</p>
+<p>这种设计的最终结果是：</p>
+<ul>
+<li>新玩家可以利用冲锋枪等小口径武器打出出其不意的效果，同时学习压枪技巧</li>
+<li>老玩家能够用突击步枪等高伤害武器的短点压枪在对局中获得更好的优势</li>
+</ul>
+<p>此外，删除随机后坐也说明后坐力设计中一个十分重要的思想：</p>
+<p>策划不应该在玩家没有犯错的时候惩罚玩家，他们的失败应该来自自身的操作失误外加一点点倒霉，而不是跟一个完全没有规律的天意相互博弈。</p>
+<h3 id="《逃离塔科夫》——RPG与硬核FPS的结合"><a href="#《逃离塔科夫》——RPG与硬核FPS的结合" class="headerlink" title="《逃离塔科夫》——RPG与硬核FPS的结合"></a>《逃离塔科夫》——RPG与硬核FPS的结合</h3><p>我们必须说明一个概念：《逃离塔科夫》中，角色养成元素是整个游戏的核心系统。理解了这个概念，你才能理解为什么他的后坐系统要这么设计。</p>
+<p>在早期版本中，《逃离塔科夫》存在明显的 Automatic Recoil Compensate（自动后座补偿）机制：玩家开火时，武器会产生较为明显的初始后坐，而随着持续射击，系统会逐渐对武器运动进行补偿。</p>
+<p>因此玩家会发现：哎，你这枪怎么越打越稳啊？</p>
+<p>如果我们将这种系统简化为一个曲线，可以理解为：</p>
+<p>开火瞬间→初始后坐→自动补偿机制→后坐减弱→武器趋于稳定</p>
+<p>这实际上是RPG+FPS与传统竞技FPS设计理念的差异所导致。</p>
+<p>RPG游戏的一个核心趣味在于对角色成长的感知，自动后坐补偿机制正是为了这一目标服务的。</p>
+<p>在游戏中，同一机制会根据角色对应技能的等级产生不同效果：比如饥饿会导致低级角色扣血，高代谢技能角色能免疫饥饿效果；低好感玩家玩scav模式（假扮人机）会被BOSS团肘飞，高商人好感玩家的scav见到BOSS能获得BOSS的保护等。</p>
+<p>这一设计在战斗中的体现就是武器配件与角色瞄准技能等级等数值对自动后坐补偿机制的影响：</p>
+<p>一名装备差、等级低的角色在使用未经改装的武器时，进入稳定射击的姿态往往会十分艰难；随着角色成长、武器优化与相关属性的提升，其自动后坐补偿机制的生效时间也会变短。</p>
+<p>这一设计在公测早期阶段呈现出了一个问题——即玩家普遍的”Mag Dump”（清空弹匣）倾向：枪自己能稳定下来，那么为什么还需要停下来？与其精确的点射，不如大大方方扣住扳机压上去。</p>
+<p>然而没过多久玩家发现BSG早就想到了这点，武器普遍存在一个名为”散热性”的数值，当武器持续开火，膛内的高温燃气会提升枪管热度，进而导致武器可靠性下降，提升卡壳几率（波波沙这种不存在机匣的神奇产物除外），这个机制就刚好取代了《彩虹六号：围攻》多阶段后坐力的生态位。</p>
+
+	</div>
+
+	<div class="page-template-comments">
+		
+	</div>
+</div>
+
+<div class="paginator">
+	
+</div>
+  
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2026&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">Seagull OO</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        13 posts in total
+                    </span>
+                    
+                </p>
+            
+        </div>
+        
+            <script data-swup-reload-script src="https://cn.vercount.one/js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.9.0</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container" role="dialog" aria-modal="true" aria-label="Image viewer">
+	<button class="image-viewer-close" type="button" aria-label="Close">
+		<i class="fa-solid fa-xmark"></i>
+	</button>
+	<button class="image-viewer-prev" type="button" aria-label="Prev">
+		<i class="fa-solid fa-chevron-left"></i>
+	</button>
+	<div class="image-viewer-frame">
+		<img src="" alt="">
+	</div>
+	<div class="image-viewer-exif-panel hidden absolute left-1/2 bottom-20 -translate-x-1/2 w-[min(92vw,420px)] max-h-[60vh] overflow-hidden rounded-2xl bg-background-color-transparent-80 p-4 text-left shadow-redefine-flat backdrop-blur-md" role="dialog" aria-label="EXIF" aria-hidden="true">
+		<div class="flex items-center justify-between mb-3">
+			<span class="text-sm font-semibold text-first-text-color">EXIF</span>
+			<button class="image-viewer-exif-close flex h-8 w-8 items-center justify-center rounded-full bg-background-color-transparent-80 text-first-text-color transition hover:bg-background-color-transparent-40" type="button" aria-label="Close">
+				<i class="fa-solid fa-xmark text-[0.65rem]"></i>
+			</button>
+		</div>
+		<div class="image-viewer-exif-cards grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[50vh] overflow-y-auto pr-1 scrollbar-hide"></div>
+		<template class="image-viewer-exif-card-template">
+			<div class="rounded-lg bg-background-color-transparent-40 px-3 py-2">
+				<div class="image-viewer-exif-card-header flex items-center gap-2 mb-1">
+					<i class="image-viewer-exif-card-icon fa-solid fa-circle-info text-xs text-third-text-color"></i>
+					<div class="image-viewer-exif-card-title text-xs font-semibold text-first-text-color"></div>
+				</div>
+				<div class="image-viewer-exif-card-items flex flex-col gap-1"></div>
+			</div>
+		</template>
+	</div>
+	<button class="image-viewer-exif-toggle flex items-center gap-2 hidden absolute left-1/2 bottom-6 -translate-x-1/2 rounded-full border border-border-color bg-background-color-transparent-80 px-4 py-2 text-first-text-color backdrop-blur-md transition hover:bg-background-color-transparent-40" type="button" aria-label="EXIF" aria-expanded="false">
+		<i class="fa-solid fa-circle-info text-xs"></i>
+		<span class="text-xs font-semibold uppercase tracking-wider">EXIF</span>
+	</button>
+	<button class="image-viewer-next" type="button" aria-label="Next">
+		<i class="fa-solid fa-chevron-right"></i>
+	</button>
+</div>
+
+
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    window.swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+
+    window.dispatchEvent(
+        new CustomEvent("redefine:swup:ready", {
+            detail: {
+                swup: window.swup,
+            },
+        }),
+    );
+</script>
+
+
+
+	
+<script src="/js/build/main.js" type="module"></script>
+
+
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+
+
+
+
+
+
+
+    
+<script src="/js/build/libs/minimasonry.min.js" data-swup-reload-script=""></script>
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+
+	
+</body>
+
+</html>
